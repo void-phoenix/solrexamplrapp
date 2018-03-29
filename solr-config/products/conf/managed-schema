@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="exampleCollection" version="1.6">
+  <uniqueKey>id</uniqueKey>
+  <field name="_root_" type="string" multiValued="false" indexed="true" required="true" stored="false"/>
+  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="brand" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="color" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="department" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="description" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="docType" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="id" type="string" docValues="true" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="price" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="title" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
+
+  <fieldType name="currency" class="solr.CurrencyField" currencyConfig="currency.xml" defaultCurrency="USD" precisionStep="8"/>
+  <fieldType name="double" class="solr.DoublePointField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+  <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
+      <filter class="solr.SynonymFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
+      <filter class="solr.LowerCaseFilterFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory"/>
+      <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+</schema>

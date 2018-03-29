@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import rocketsolrapp.clientapi.factory.SolrRemoteClientFactory;
+import rocketsolrapp.solr.factory.SolrClientFactory;
+import rocketsolrapp.solr.factory.SolrRemoteClientFactory;
 
 import java.io.IOException;
 
@@ -21,9 +22,8 @@ public class SolrRequester {
 
     private final static Logger LOG = LoggerFactory.getLogger(SolrRequester.class);
 
-    @Autowired()
-    @Qualifier("remote")
-    SolrRemoteClientFactory solrClientFactory;
+    @Autowired
+    protected SolrClientFactory solrClientFactory;
 
     public NamedList sendSolrRequest(String coreName, SolrRequest solrRequest)
             throws IOException, SolrServerException {
