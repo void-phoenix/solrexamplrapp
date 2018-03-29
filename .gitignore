@@ -1,0 +1,5 @@
+
+.idea/
+target/
+embeddedsolr/target
+restclientapi/target

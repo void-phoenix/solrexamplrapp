@@ -1,0 +1,54 @@
+{
+  "id": "5",
+  "price": 39.99,
+  "docType": "product",
+  "title": "Levi's Men's 569 Loose Straight Leg Jean, Crosstown-Stretch",
+  "description": "98% Cotton, 2% Elastane
+  Zip fly with metal shank button
+  Classic five-pocket styling
+  Signature Levi's® tab and arcuate stitches on back pockets
+  Bovine Leather patch with iconic Two Horse Pull logo, representing the strength of Levi's clothing
+  ",
+  "department": "Men",
+  "brand": "Levi's",
+  "_childDocuments_": [
+    {
+      "id": "5_1",
+      "size": "small",
+      "color": "Black",
+      "docType": "SKU"
+    },
+    {
+      "id": "5_2",
+      "size": "medium",
+      "color": "Black",
+      "docType": "SKU"
+    },
+    {
+      "id": "5_3",
+      "size": "large",
+      "color": "Blue",
+      "docType": "SKU"
+    },
+    {
+      "id": "5_4",
+      "size": "small",
+      "color": "Blue",
+      "docType": "SKU"
+    },
+    {
+      "id": "5_5",
+      "size": "medium",
+      "color": "Blue",
+      "docType": "SKU"
+    },
+    {
+      "id": "5_6",
+      "size": "large",
+      "color": "Gray",
+      "docType": "SKU"
+    }
+  ]
+}
+
+
