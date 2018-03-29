@@ -1,5 +1,9 @@
-
+restclientapi/rest-client-api.iml
+embeddedsolr/embeddedsolr.iml
+gd-solr.iml
 .idea/
 target/
+logs/
+indexes/
 embeddedsolr/target
 restclientapi/target
