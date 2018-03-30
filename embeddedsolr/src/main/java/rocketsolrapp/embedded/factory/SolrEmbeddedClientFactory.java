@@ -1,4 +1,4 @@
-package rocketsolrapp.embedded.solr.factory;
+package rocketsolrapp.embedded.factory;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;

@@ -1,4 +1,4 @@
-package rocketsolrapp;
+package rocketsolrapp.boot;
 
 
 import org.springframework.boot.SpringApplication;
@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.autoconfigure.solr.SolrAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan("rocketsolrapp.clientapi, " +
-        "rocketsolrapp.embedded.solr")
+@ComponentScan("rocketsolrapp.embedded, " +
+      "rocketsolrapp.clientapi")
 @EnableAutoConfiguration(exclude = {SolrAutoConfiguration.class,
         SecurityAutoConfiguration.class})
 public class EmbeddedApplication {

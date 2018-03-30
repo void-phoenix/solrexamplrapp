@@ -1,8 +1,6 @@
 package rocketsolrapp.clientapi.controller;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +11,6 @@ import rocketsolrapp.clientapi.service.ProductService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/{coreName}")
 @ResponseStatus(value = HttpStatus.OK)
 public class CollectionController {
 
@@ -21,28 +18,28 @@ public class CollectionController {
     ProductService productService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Product> query(@PathVariable String coreName, @ModelAttribute RequestWithParams requestWithParams)
+    public List<Product> query(@ModelAttribute RequestWithParams requestWithParams)
             throws Exception {
-        return productService.query(coreName, requestWithParams);
+        return productService.query(requestWithParams);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public void delete(@PathVariable String coreName, @ModelAttribute Product product) throws Exception {
-        productService.delete(coreName, product);
+    public void delete(@ModelAttribute Product product) throws Exception {
+        productService.delete(product);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public void add(@PathVariable String coreName, @ModelAttribute Product product) throws Exception {
-        productService.add(coreName, product);
+    public void add(@ModelAttribute Product product) throws Exception {
+        productService.add(product);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void update(@PathVariable String coreName, @ModelAttribute Product product) throws Exception {
-        productService.update(coreName, product);
+    public void update(@ModelAttribute Product product) throws Exception {
+        productService.update(product);
     }
 
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
-    public void clear(@PathVariable String coreName) throws Exception {
-        productService.clear(coreName);
+    public void clear() throws Exception {
+        productService.clear();
     }
 }

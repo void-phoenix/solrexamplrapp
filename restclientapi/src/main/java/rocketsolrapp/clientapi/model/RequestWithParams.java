@@ -2,13 +2,13 @@ package rocketsolrapp.clientapi.model;
 
 public class RequestWithParams {
 
-    private String query;
+    private String keywords;
 
-    public String getQuery() {
-        return query;
+    public String getKeywords() {
+        return keywords;
     }
 
-    public void setQuery(String query) {
-        this.query = query;
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 }

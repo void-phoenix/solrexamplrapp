@@ -10,10 +10,8 @@ import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.solr.factory.SolrClientFactory;
-import rocketsolrapp.solr.factory.SolrRemoteClientFactory;
 
 import java.io.IOException;
 
@@ -32,7 +30,7 @@ public class SolrRequester {
     }
 
     public QueryResponse executeQuery(final String coreName,
-                                       final ModifiableSolrParams query) {
+                                      final ModifiableSolrParams query) {
         SolrClient solrClient = solrClientFactory.getClient(coreName);
         try {
             return solrClient.query(query, SolrRequest.METHOD.POST);

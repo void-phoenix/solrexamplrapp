@@ -20,7 +20,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot-version}</version>
                 <configuration>
-                    <mainClass>rocketsolrapp.EmbeddedApplication</mainClass>
+                    <mainClass>rocketsolrapp.boot.EmbeddedApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.Product;
 import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.model.SKU;
+import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,15 +20,21 @@ import java.util.*;
 @Service
 public class ProductService {
 
+    private static final String CORE_NAME = "products";
+
     @Autowired
     SolrRequester solr;
 
-    public List<Product> query(String coreName, RequestWithParams request) {
+    @Autowired
+    ProductQueryBuilder productRequestbuilder;
+
+    public List<Product> query(RequestWithParams request) {
 
         final List<Product> result = new ArrayList<>();
+        final String textQuery = productRequestbuilder.buildProducsWithSkuTextQuery(request.getKeywords());
+        final SolrQuery query = new SolrQuery(textQuery);
 
-        final SolrQuery query = new SolrQuery(request.getQuery());
-        final QueryResponse response = solr.executeQuery(coreName, query);
+        final QueryResponse response = solr.executeQuery(CORE_NAME, query);
 
         final Map<String, List<SolrDocument>> groupedDocuments = groupByRoot(response.getResults());
 
@@ -54,29 +61,30 @@ public class ProductService {
         return result;
     }
 
-    public void add(String coreName, Product product) throws SolrServerException, IOException{
+    public void add(Product product) throws SolrServerException, IOException{
         final UpdateRequest request = new UpdateRequest();
         request.add(convertToSolrFormat(product), false);
-        solr.sendSolrRequest(coreName, request);
+        solr.sendSolrRequest(CORE_NAME, request);
     }
 
-    public void clear(String coreName) throws SolrServerException, IOException {
+    public void clear() throws SolrServerException, IOException {
         final UpdateRequest request = new UpdateRequest();
         request.deleteByQuery("*:*");
-        solr.sendSolrRequest(coreName, request);
+        solr.sendSolrRequest(CORE_NAME, request);
+
     }
 
-    public Product update(String coreName, Product product) throws SolrServerException, IOException {
+    public Product update(Product product) throws SolrServerException, IOException {
         final UpdateRequest request = new UpdateRequest();
         request.add(convertToSolrFormat(product), true);
-        solr.sendSolrRequest(coreName, request);
+        solr.sendSolrRequest(CORE_NAME, request);
         return product;
     }
 
-    public void delete(String coreName, Product product) throws SolrServerException, IOException {
+    public void delete(Product product) throws SolrServerException, IOException {
         final UpdateRequest request = new UpdateRequest();
         request.deleteByQuery("_root_:" + product.getId());
-        solr.sendSolrRequest(coreName, request);
+        solr.sendSolrRequest(CORE_NAME, request);
     }
 
 
