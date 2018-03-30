@@ -11,6 +11,7 @@ import rocketsolrapp.clientapi.service.ProductService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/query")
 @ResponseStatus(value = HttpStatus.OK)
 public class CollectionController {
 
