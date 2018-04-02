@@ -36,13 +36,14 @@ public class ProductQueryBuilder {
         SolrQuery query = new SolrQuery(BASE_QUERY);
         params.add("$searchLegs", "searchLegs=+(" +
                 //"{!lucene v=$childText} " +
-                //TODO unvomment when we have childConcept query buiilder
+                //TODO uncomment when we have childConcept query buiilder
                 //"{!lucene v=$childConcept} " +
                 "{!child of=docType:parent v=$parentLegs})");
 
         params.add("keywords", keywords);
         params = addChildTextParam(params);
         params = addParentLegsParam(params);
+        params = addChildTransformer(params);
         query.add(params);
 
         return query;
@@ -50,6 +51,12 @@ public class ProductQueryBuilder {
     }
 
     private ModifiableSolrParams addChildTextParam(ModifiableSolrParams params) {
+
+        return params;
+    }
+
+    private ModifiableSolrParams addChildTransformer(ModifiableSolrParams params) {
+        params.add("fl", "*, score, [child parentFilter=docType:product childFilter=docType:SKU limit=10]");
 
         return params;
     }

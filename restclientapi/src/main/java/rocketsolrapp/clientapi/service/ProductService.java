@@ -37,30 +37,28 @@ public class ProductService {
 
         final Map<String, List<SolrDocument>> groupedDocuments = groupByRoot(response.getResults());
 
-        for (String key: groupedDocuments.keySet()){
+        for (SolrDocument solrDocument : response.getResults()) {
             final Product product = new Product();
-            product.setId(key);
-            for (SolrDocument document : groupedDocuments.get(key)){
-                if (((String) document.getFieldValue("docType")).equals("product")){
-                    product.setBrand( (String) document.getFieldValue("brand"));
-                    product.setDepartment( (String) document.getFieldValue("department"));
-                    product.setDescription( (String) document.getFieldValue("description"));
-                    product.setPrice( (double) document.getFieldValue("price"));
-                    product.setTitle( (String) document.getFieldValue("title"));
-                } else {
-                    final SKU sku = new SKU();
-                    sku.setId( (String) document.getFieldValue("id"));
-                    sku.setColor( (String) document.getFieldValue("color"));
-                    sku.setSize( (String) document.getFieldValue("size"));
-                    product.addSKU(sku);
-                }
+            product.setId((String) solrDocument.getFieldValue("id"));
+            product.setBrand((String) solrDocument.getFieldValue("brand"));
+            product.setDepartment((String) solrDocument.getFieldValue("department"));
+            product.setDescription((String) solrDocument.getFieldValue("description"));
+            product.setPrice((double) solrDocument.getFieldValue("price"));
+            product.setTitle((String) solrDocument.getFieldValue("title"));
+
+            for (SolrDocument skuDocument : solrDocument.getChildDocuments()){
+                final SKU sku = new SKU();
+                sku.setId((String) skuDocument.getFieldValue("id"));
+                sku.setColor((String) skuDocument.getFieldValue("color"));
+                sku.setSize((String) skuDocument.getFieldValue("size"));
+                product.addSKU(sku);
             }
             result.add(product);
         }
         return result;
     }
 
-    public void add(Product product) throws SolrServerException, IOException{
+    public void add(Product product) throws SolrServerException, IOException {
         final UpdateRequest request = new UpdateRequest();
         request.add(convertToSolrFormat(product), false);
         solr.sendSolrRequest(CORE_NAME, request);
@@ -100,7 +98,7 @@ public class ProductService {
         return result;
     }
 
-    private SolrInputDocument convertToSolrFormat(Product product){
+    private SolrInputDocument convertToSolrFormat(Product product) {
         SolrInputDocument productDocument = new SolrInputDocument();
         productDocument.setField("id", product.getId());
         productDocument.setField("brand", product.getBrand());
