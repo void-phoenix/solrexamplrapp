@@ -31,8 +31,7 @@ public class ProductService {
     public List<Product> query(RequestWithParams request) {
 
         final List<Product> result = new ArrayList<>();
-        final String textQuery = productRequestbuilder.buildProducsWithSkuTextQuery(request.getKeywords());
-        final SolrQuery query = new SolrQuery(textQuery);
+        final SolrQuery query = productRequestbuilder.buildProductQuery(request.getKeywords());
 
         final QueryResponse response = solr.executeQuery(CORE_NAME, query);
 
