@@ -31,11 +31,9 @@ public class ProductService {
     public List<Product> query(RequestWithParams request) {
 
         final List<Product> result = new ArrayList<>();
-        final SolrQuery query = productRequestbuilder.buildProductQuery(request.getKeywords());
+        final SolrQuery query = productRequestbuilder.buildProductQuery(request);
 
         final QueryResponse response = solr.executeQuery(CORE_NAME, query);
-
-        final Map<String, List<SolrDocument>> groupedDocuments = groupByRoot(response.getResults());
 
         for (SolrDocument solrDocument : response.getResults()) {
             final Product product = new Product();

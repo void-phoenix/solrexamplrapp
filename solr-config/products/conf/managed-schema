@@ -13,6 +13,9 @@
   <field name="price" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="title" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
+  <!--<copyField source="brand" destination="brand_concept"/>
+
+  dynamics field *_concept type="concept"/>-->
 
   <fieldType name="currency" class="solr.CurrencyField" currencyConfig="currency.xml" defaultCurrency="USD" precisionStep="8"/>
   <fieldType name="double" class="solr.DoublePointField" sortMissingLast="true" docValues="true"/>

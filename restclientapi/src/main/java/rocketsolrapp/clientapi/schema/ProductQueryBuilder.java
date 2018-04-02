@@ -4,6 +4,7 @@ package rocketsolrapp.clientapi.schema;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.springframework.stereotype.Service;
+import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.model.SKU;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +21,9 @@ public class ProductQueryBuilder {
     private static final String SIZE = "size";
     private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs}";
     private static final String PARENT_LEGS_QUERY = "{!dismax v=$keywords qf=$dismaxQueryFields}";
+
+    private static final String SOLR_FILTER_QUERY_PARAM = "fq";
+
     private List<Field> fields;
 
     @PostConstruct
@@ -31,19 +35,21 @@ public class ProductQueryBuilder {
         fields.add(new Field(SIZE, 1.0f, DocType.SKU, FieldType.TEXT));
     }
 
-    public SolrQuery buildProductQuery(String keywords) {
+    public SolrQuery buildProductQuery(RequestWithParams requestWithParams) {
         ModifiableSolrParams params = new ModifiableSolrParams();
-        SolrQuery query = new SolrQuery(BASE_QUERY);
-        params.add("$searchLegs", "searchLegs=+(" +
+        SolrQuery query = new SolrQuery();
+        params.add("q", BASE_QUERY);
+        params.add("searchLegs", "+(" +
                 //"{!lucene v=$childText} " +
                 //TODO uncomment when we have childConcept query buiilder
                 //"{!lucene v=$childConcept} " +
-                "{!child of=docType:parent v=$parentLegs})");
+                "{!child of=docType:product v=$parentLegs})");
 
-        params.add("keywords", keywords);
         params = addChildTextParam(params);
         params = addParentLegsParam(params);
         params = addChildTransformer(params);
+        params = addFilters(params, requestWithParams.getFilter());
+        params.add("keywords", requestWithParams.getKeywords());
         query.add(params);
 
         return query;
@@ -61,9 +67,16 @@ public class ProductQueryBuilder {
         return params;
     }
 
+    private ModifiableSolrParams addFilters(ModifiableSolrParams params, List<String> filter) {
+        for (String param : filter) {
+            params.add(SOLR_FILTER_QUERY_PARAM, param);
+        }
+        return params;
+    }
+
     private ModifiableSolrParams addParentLegsParam(ModifiableSolrParams params) {
         params.add("parentLegs", PARENT_LEGS_QUERY);
-        final String dismaxQueryFields = getProductTextFields().stream().map(sku -> sku.getName() + sku.getWeight())
+        final String dismaxQueryFields = getProductTextFields().stream().map(sku -> sku.getName() + "^" + sku.getWeight())
                 .collect(Collectors.joining(" "));
         params.add("dismaxQueryFields", dismaxQueryFields);
         return params;
