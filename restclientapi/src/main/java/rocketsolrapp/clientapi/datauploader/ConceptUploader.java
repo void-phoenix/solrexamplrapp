@@ -59,11 +59,7 @@ public class ConceptUploader {
         @Override
         public void run() {
             final List<String> concepts = queryForConcepts();
-            try {
-                updateConcepts(concepts);
-            } catch (Exception ex) {
-                LOG.error(ex.getMessage());
-            }
+            updateConcepts(concepts);
         }
 
         private List<String> queryForConcepts() {
@@ -81,14 +77,18 @@ public class ConceptUploader {
                     .collect(Collectors.toList());
         }
 
-        private void updateConcepts(List<String> concepts) throws Exception{
-
-            final SolrInputDocument concept = new SolrInputDocument();
-            concept.setField("field", conceptField);
-            concept.setField("searchTerms", concepts);
-            final UpdateRequest request = new UpdateRequest();
-            request.add(concept);
-            solrRequester.sendSolrRequest("concepts", request);
+        private void updateConcepts(List<String> concepts) {
+            concepts.forEach(conceptString -> {
+                final SolrInputDocument conceptDocument = new SolrInputDocument();
+                conceptDocument.setField("field", conceptField);
+                conceptDocument.setField("searchTerms", conceptString);
+                final UpdateRequest request = new UpdateRequest();
+                request.add(conceptDocument);try {
+                    solrRequester.sendSolrRequest("concepts", request);
+                } catch (Exception ex) {
+                    LOG.error(ex.getMessage());
+                }
+            });
         }
     }
 
