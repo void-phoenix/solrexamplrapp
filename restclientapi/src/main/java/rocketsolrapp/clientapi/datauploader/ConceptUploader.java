@@ -27,9 +27,6 @@ public class ConceptUploader {
     private static final Logger LOG = LoggerFactory.getLogger(ConceptUploader.class);
 
     @Autowired
-    SolrClientFactory clientFactory;
-
-    @Autowired
     ProductQueryBuilder productQueryBuilder;
 
     @Autowired

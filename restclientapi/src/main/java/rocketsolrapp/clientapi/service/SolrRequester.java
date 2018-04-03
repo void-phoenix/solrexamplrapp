@@ -26,7 +26,9 @@ public class SolrRequester {
     public NamedList sendSolrRequest(String coreName, SolrRequest solrRequest)
             throws IOException, SolrServerException {
         SolrClient solrClient = solrClientFactory.getClient(coreName);
-        return solrClient.request(solrRequest);
+        final NamedList result = solrClient.request(solrRequest);
+        solrClient.commit();
+        return result;
     }
 
     public QueryResponse executeQuery(final String coreName,
