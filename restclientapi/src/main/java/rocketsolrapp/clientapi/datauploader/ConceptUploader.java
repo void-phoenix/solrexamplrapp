@@ -52,14 +52,14 @@ public class ConceptUploader {
 
         private final String conceptField;
 
-        public UpdateConceptTask(String conceptField) {
+        UpdateConceptTask(String conceptField) {
             this.conceptField = conceptField;
         }
 
         @Override
         public void run() {
             final List<String> concepts = queryForConcepts();
-            updateConcepts(concepts);
+            updateConceptCore(concepts);
         }
 
         private List<String> queryForConcepts() {
@@ -77,7 +77,7 @@ public class ConceptUploader {
                     .collect(Collectors.toList());
         }
 
-        private void updateConcepts(List<String> concepts) {
+        private void updateConceptCore(List<String> concepts) {
             concepts.forEach(conceptString -> {
                 final SolrInputDocument conceptDocument = new SolrInputDocument();
                 conceptDocument.setField("field", conceptField);
