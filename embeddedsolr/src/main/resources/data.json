@@ -1,54 +1,341 @@
-{
-  "id": "5",
-  "price": 39.99,
-  "docType": "product",
-  "title": "Levi's Men's 569 Loose Straight Leg Jean, Crosstown-Stretch",
-  "description": "98% Cotton, 2% Elastane
-  Zip fly with metal shank button
-  Classic five-pocket styling
-  Signature Levi's® tab and arcuate stitches on back pockets
-  Bovine Leather patch with iconic Two Horse Pull logo, representing the strength of Levi's clothing
-  ",
-  "department": "Men",
-  "brand": "Levi's",
-  "_childDocuments_": [
-    {
-      "id": "5_1",
-      "size": "small",
-      "color": "Black",
-      "docType": "SKU"
-    },
-    {
-      "id": "5_2",
-      "size": "medium",
-      "color": "Black",
-      "docType": "SKU"
-    },
-    {
-      "id": "5_3",
-      "size": "large",
-      "color": "Blue",
-      "docType": "SKU"
-    },
-    {
-      "id": "5_4",
-      "size": "small",
-      "color": "Blue",
-      "docType": "SKU"
-    },
-    {
-      "id": "5_5",
-      "size": "medium",
-      "color": "Blue",
-      "docType": "SKU"
-    },
-    {
-      "id": "5_6",
-      "size": "large",
-      "color": "Gray",
-      "docType": "SKU"
-    }
-  ]
-}
+[
+  {
+    "id": "1",
+    "price": 39.99,
+    "docType": "product",
+    "title": "Levi's Men's 569 Loose Straight Leg Jean, Crosstown-Stretch",
+    "description": "98% Cotton, 2% Elastane
+    Zip
+    fly
+    with
+    metal
+    shank
+    button
+    Classic
+    five-pocket
+    styling
+    Signature
+    Levi
+    's® tab and arcuate stitches on back pockets
+    Bovine
+    Leather
+    patch
+    with
+    iconic
+    Two
+    Horse
+    Pull
+    logo,
+    representing
+    the
+    strength
+    of
+    Levi
+    's clothing
+    ",
+    "department": "Men",
+    "brand": "Levi's",
+    "_childDocuments_": [
+      {
+        "id": "1_1",
+        "size": "small",
+        "color": "Black",
+        "docType": "SKU"
+      },
+      {
+        "id": "1_2",
+        "size": "medium",
+        "color": "Black",
+        "docType": "SKU"
+      },
+      {
+        "id": "1_3",
+        "size": "large",
+        "color": "Blue",
+        "docType": "SKU"
+      },
+      {
+        "id": "1_4",
+        "size": "small",
+        "color": "Blue",
+        "docType": "SKU"
+      },
+      {
+        "id": "1_5",
+        "size": "medium",
+        "color": "Blue",
+        "docType": "SKU"
+      },
+      {
+        "id": "1_6",
+        "size": "large",
+        "color": "Gray",
+        "docType": "SKU"
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "price": 19.86,
+    "docType": "product",
+    "title": "Levi's Men's 505 Regular Fit Jean",
+    "description": "100% Cotton
+    Made in U.S.A.
+    Zipper closure
+    Machine Wash
+    Regular-fit jean featuring five-pocket styling and signature logo label at back waist;Extra room in thigh
+    Stretch Denim",
+    "department": "Men",
+    "brand": "Levi's",
+    "_childDocuments_": [
+      {
+        "id": "2_1",
+        "size": "small",
+        "color": "Black",
+        "docType": "SKU"
+      },
+      {
+        "id": "2_2",
+        "size": "medium",
+        "color": "Black",
+        "docType": "SKU"
+      },
+      {
+        "id": "2_3",
+        "size": "large",
+        "color": "Blue",
+        "docType": "SKU"
+      },
+      {
+        "id": "2_4",
+        "size": "small",
+        "color": "Gray",
+        "docType": "SKU"
+      },
+      {
+        "id": "2_5",
+        "size": "medium",
+        "color": "Gray",
+        "docType": "SKU"
+      },
+      {
+        "id": "2_6",
+        "size": "large",
+        "color": "Black",
+        "docType": "SKU"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "price": 36.18,
+    "docType": "product",
+    "title": "Levi's Men's 511 Slim Fit Jeans",
+    "description": "100% Cotton
+    Imported
+    Button closure
+    Machine Wash
+    Slim fit
+    14 1/2 inch leg opening
+    Slightly tapered leg
+    Sits below waist",
+    "department": "Men",
+    "brand": "Levi's",
+    "_childDocuments_": [
+      {
+        "id": "3_1",
+        "size": "small",
+        "color": "Gray",
+        "docType": "SKU"
+      },
+      {
+        "id": "3_2",
+        "size": "medium",
+        "color": "Gray",
+        "docType": "SKU"
+      },
+      {
+        "id": "3_3",
+        "size": "large",
+        "color": "Gray",
+        "docType": "SKU"
+      },
+      {
+        "id": "3_4",
+        "size": "small",
+        "color": "White",
+        "docType": "SKU"
+      },
+      {
+        "id": "3_5",
+        "size": "medium",
+        "color": "White",
+        "docType": "SKU"
+      },
+      {
+        "id": "3_6",
+        "size": "large",
+        "color": "White",
+        "docType": "SKU"
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "price": 49.00,
+    "docType": "product",
+    "title": "Buttoned Down Men's Slim Fit Spread-Collar Pattern Non-Iron Dress Shirt Without Pocket",
+    "description": "100% Supima Cotton
+    Imported
+    Machine Wash
+    Long-sleeve dress shirt featuring spread collar and no pocket
+    Luxury Supima cotton with a lightweight finish; straight back yoke with center box pleat
+    Unconditional Satisfaction Guarantee: If you are not completely satisfied with your Buttoned Down shirt at any time, we are happy to give you a full refund
+    Buttoned Down shirts are offered in three fits: Slim, Tailored and Classic. Slim fit is our slimmest style, cut closest to the body
+    Available in 44 size combinations for a more precise fit, including Tall sizes. We recommend measuring your sleeve length to order the correct size",
+    "department": "Men",
+    "brand": "Buttoned Down",
+    "_childDocuments_": [
+      {
+        "id": "4_1",
+        "size": "small",
+        "color": "Red",
+        "docType": "SKU"
+      },
+      {
+        "id": "4_2",
+        "size": "medium",
+        "color": "Red",
+        "docType": "SKU"
+      },
+      {
+        "id": "4_3",
+        "size": "large",
+        "color": "White",
+        "docType": "SKU"
+      },
+      {
+        "id": "4_4",
+        "size": "small",
+        "color": "Blue",
+        "docType": "SKU"
+      },
+      {
+        "id": "4_5",
+        "size": "medium",
+        "color": "Red",
+        "docType": "SKU"
+      },
+      {
+        "id": "4_6",
+        "size": "large",
+        "color": "Green",
+        "docType": "SKU"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "price": 16.99,
+    "docType": "product",
+    "title": "DAVID.ANN Mens Hipster Hip Hop Pullover Longline Side Zipper Long Sleeve Hooded T Shirt",
+    "description": "65% Cotton, 35% Spandex
+    Imported; Machine wash.
+    Plus long designed;Side zipper
+    Long sleeve hooded shirt; Hooded with drawstring cord
+    NOTICE: Before order, please refer to the Size Chart in description or image (Not the Amazon size chart)",
+    "department": "Men",
+    "brand": "DAVID.ANN",
+    "_childDocuments_": [
+      {
+        "id": "5_1",
+        "size": "small",
+        "color": "Camel",
+        "docType": "SKU"
+      },
+      {
+        "id": "5_2",
+        "size": "medium",
+        "color": "Camel",
+        "docType": "SKU"
+      },
+      {
+        "id": "5_3",
+        "size": "large",
+        "color": "Camel",
+        "docType": "SKU"
+      },
+      {
+        "id": "5_4",
+        "size": "small",
+        "color": "White",
+        "docType": "SKU"
+      },
+      {
+        "id": "5_5",
+        "size": "medium",
+        "color": "White",
+        "docType": "SKU"
+      },
+      {
+        "id": "5_6",
+        "size": "large",
+        "color": "White",
+        "docType": "SKU"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "price": 17.84,
+    "docType": "product",
+    "title": "PODOM Men's Long Sleeve Hoodies Hooded Sweatshirts Tee Shirts Cotton V Neck Tops",
+    "description": "Material: Polyester+Spandex; High quality and comfortability.
+    Men's popular long sleeve hoodies featuring solid color, ultra softness and high-quality fabric.
+    Quick-drying, Slim Fitness; Natural-feel material; Simple but fashionable design; Good choices for the change of seasons.
+    Suitable for spring, autumn, winter and casual occasions; Perfects for outdoor activities and indoor leisure wearing.
+    NOTICE: Our tag sizes are ASIAN SIZE. Please check your size with our SIZE CHART before you buy it. Size may be 2cm/1 inch inaccuracy DUE TO HAND MEASURE; Color may be little different due to monitor. Thank you for your understanding. If you have any questions, please don't hesitate to contact us.",
+    "department": "Men",
+    "brand": "PODOM",
+    "_childDocuments_": [
+      {
+        "id": "6_1",
+        "size": "small",
+        "color": "Black",
+        "docType": "SKU"
+      },
+      {
+        "id": "6_2",
+        "size": "medium",
+        "color": "Black",
+        "docType": "SKU"
+      },
+      {
+        "id": "6_3",
+        "size": "large",
+        "color": "Blue",
+        "docType": "SKU"
+      },
+      {
+        "id": "6_4",
+        "size": "small",
+        "color": "Navy",
+        "docType": "SKU"
+      },
+      {
+        "id": "6_5",
+        "size": "medium",
+        "color": "Navy",
+        "docType": "SKU"
+      },
+      {
+        "id": "6_6",
+        "size": "large",
+        "color": "Navy",
+        "docType": "SKU"
+      }
+    ]
+  }
+]
 
 
