@@ -90,6 +90,12 @@
         <httpCaching never304="true"/>
     </requestDispatcher>
 
+    <updateRequestProcessorChain name="uuid">
+        <processor class="solr.UUIDUpdateProcessorFactory">
+            <str name="fieldName">id</str>
+        </processor>
+        <processor class="solr.RunUpdateProcessorFactory" />
+    </updateRequestProcessorChain>
 
     <requestHandler name="/query" class="solr.SearchHandler">
         <lst name="defaults">
@@ -115,6 +121,7 @@
     <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell,/browse,update">
         <lst name="defaults">
             <str name="df">title</str>
+            <str name="update.chain">uuid</str>
         </lst>
     </initParams>
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import rocketsolrapp.clientapi.model.Product;
 import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.service.ProductService;
+import rocketsolrapp.clientapi.datauploader.ConceptUploader;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ public class CollectionController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ConceptUploader conceptUploader;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Product> query(@ModelAttribute RequestWithParams requestWithParams)
@@ -42,5 +46,10 @@ public class CollectionController {
     @RequestMapping(value = "/clear", method = RequestMethod.GET)
     public void clear() throws Exception {
         productService.clear();
+    }
+
+    @RequestMapping(value = "/concepts", method = RequestMethod.GET)
+    public void uploadConcepts() {
+        conceptUploader.uploadConcepts();
     }
 }

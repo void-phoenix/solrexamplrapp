@@ -5,7 +5,6 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.RequestWithParams;
-import rocketsolrapp.clientapi.model.SKU;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -19,6 +18,9 @@ public class ProductQueryBuilder {
     private static final String DESCRIPTION = "description";
     private static final String COLOR = "color";
     private static final String SIZE = "size";
+    private static final String SIZE_CINCEPT = "size_concept";
+    private static final String COLOR_CONCEPT = "color_concept";
+    private static final String BRAND_CONCEPT = "brand_concept";
     private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs}";
     private static final String PARENT_LEGS_QUERY = "{!dismax v=$keywords qf=$dismaxQueryFields}";
 
@@ -33,6 +35,9 @@ public class ProductQueryBuilder {
         fields.add(new Field(DESCRIPTION, 1.0f, DocType.PRODUCT, FieldType.TEXT));
         fields.add(new Field(COLOR, 1.0f, DocType.SKU, FieldType.TEXT));
         fields.add(new Field(SIZE, 1.0f, DocType.SKU, FieldType.TEXT));
+        fields.add(new Field(SIZE_CINCEPT, 1.0f, DocType.SKU, FieldType.CONCEPT));
+        fields.add(new Field(COLOR_CONCEPT, 1.0f, DocType.SKU, FieldType.CONCEPT));
+        fields.add(new Field(BRAND_CONCEPT, 1.0f, DocType.PRODUCT, FieldType.CONCEPT));
     }
 
     public SolrQuery buildProductQuery(RequestWithParams requestWithParams) {
@@ -93,5 +98,20 @@ public class ProductQueryBuilder {
         return fields.stream().filter(f -> f.getDocType().equals(DocType.PRODUCT) &&
                 f.getFieldType().equals(FieldType.TEXT))
                 .collect(Collectors.toList());
+    }
+
+    public List<String> getConceptFields(){
+        return fields.stream()
+                .filter(f -> f.getFieldType().equals(FieldType.CONCEPT))
+                .map(Field::getName)
+                .collect(Collectors.toList());
+    }
+
+    public SolrQuery buildConceptsRequestForField(String field){
+        SolrQuery query = new SolrQuery("*:*");
+        query.add("rows", "0");
+        query.add("facet", "on");
+        query.add("facet.field", field);
+        return query;
     }
 }
