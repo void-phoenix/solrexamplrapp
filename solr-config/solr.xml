@@ -19,4 +19,6 @@
         <int name="socketTimeout">${socketTimeout:600000}</int>
         <int name="connTimeout">${connTimeout:60000}</int>
     </shardHandlerFactory>
+
+    <sharedLib>lib</sharedLib>
 </solr>

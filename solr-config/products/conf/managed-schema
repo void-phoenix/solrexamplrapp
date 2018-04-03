@@ -13,9 +13,12 @@
   <field name="price" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="title" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
-  <!--<copyField source="brand" destination="brand_concept"/>
 
-  dynamics field *_concept type="concept"/>-->
+  <copyField source="brand" dest="brand_concept"/>
+  <copyField source="color" dest="color_concept"/>
+  <copyField source="size" dest="size_concept"/>
+
+  <dynamicField name="*_concept" type="concept" stored="false"/>
 
   <fieldType name="currency" class="solr.CurrencyField" currencyConfig="currency.xml" defaultCurrency="USD" precisionStep="8"/>
   <fieldType name="double" class="solr.DoublePointField" sortMissingLast="true" docValues="true"/>
@@ -36,6 +39,24 @@
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.EnglishPossessiveFilterFactory"/>
       <filter class="solr.PorterStemFilterFactory"/>
+    </analyzer>
+  </fieldType>
+
+  <fieldType name="concept" class="solr.TextField" positionIncrementGap="100" postingsFormat="Memory"
+      omitTermFreqAndPositions="true" omitNorms="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory" />
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory" />
+
+      <filter class="org.opensextant.solrtexttagger.ConcatenateFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory" />
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory" />
     </analyzer>
   </fieldType>
 </schema>

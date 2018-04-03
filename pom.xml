@@ -15,6 +15,7 @@
     <modules>
         <module>embeddedsolr</module>
         <module>restclientapi</module>
+        <module>datauploader</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>
@@ -47,6 +48,8 @@
         <commons-csv.version>1.5</commons-csv.version>
         <commons-beanutils-version>1.9.3</commons-beanutils-version>
         <lang3.version>3.7</lang3.version>
+
+        <solr-text-tagger-version>2.5</solr-text-tagger-version>
 
 
         <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
@@ -251,6 +254,7 @@
                         <artifactId>jcl-over-slf4j</artifactId>
                     </exclusion>
                 </exclusions>
+                <type>jar</type>
             </dependency>
 
             <!-- Jersey -->
@@ -321,7 +325,10 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons-beanutils-version}</version>
             </dependency>
+
         </dependencies>
+
+
     </dependencyManagement>
 
     <build>

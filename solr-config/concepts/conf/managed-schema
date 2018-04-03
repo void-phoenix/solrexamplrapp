@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Solr managed schema - automatically generated - DO NOT EDIT -->
+<schema name="exampleCollection" version="1.6">
+  <uniqueKey>id</uniqueKey>
+
+  <field name="id" type="string" docValues="true" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="field" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
+  <field name="searchTerms" type="concept" multiValued="true" indexed="true" stored="true"/>
+
+  <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+
+  <fieldType name="concept" class="solr.TextField" positionIncrementGap="100" postingsFormat="Memory"
+      omitTermFreqAndPositions="true" omitNorms="true">
+    <analyzer type="index">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory" />
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory" />
+
+      <filter class="org.opensextant.solrtexttagger.ConcatenateFilterFactory" />
+    </analyzer>
+    <analyzer type="query">
+      <tokenizer class="solr.StandardTokenizerFactory"/>
+      <filter class="solr.EnglishPossessiveFilterFactory" />
+      <filter class="solr.ASCIIFoldingFilterFactory"/>
+      <filter class="solr.LowerCaseFilterFactory" />
+    </analyzer>
+  </fieldType>
+
+</schema>
