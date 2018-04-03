@@ -14,13 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/query")
 @ResponseStatus(value = HttpStatus.OK)
-public class CollectionController {
+public class ProductController {
 
     @Autowired
     ProductService productService;
-
-    @Autowired
-    ConceptUploader conceptUploader;
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Product> query(@ModelAttribute RequestWithParams requestWithParams)
@@ -48,8 +45,4 @@ public class CollectionController {
         productService.clear();
     }
 
-    @RequestMapping(value = "/concepts", method = RequestMethod.GET)
-    public void uploadConcepts() {
-        conceptUploader.uploadConcepts();
-    }
 }

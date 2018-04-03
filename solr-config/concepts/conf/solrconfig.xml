@@ -102,7 +102,7 @@
             <str name="echoParams">explicit</str>
             <str name="wt">json</str>
             <str name="indent">true</str>
-            <str name="df">title</str>
+            <str name="df">searchTerms</str>
         </lst>
     </requestHandler>
 
@@ -120,7 +120,7 @@
 
     <initParams path="/update/**,/query,/select,/tvrh,/elevate,/spell,/browse,update">
         <lst name="defaults">
-            <str name="df">title</str>
+            <str name="df">searchTerms</str>
             <str name="update.chain">uuid</str>
         </lst>
     </initParams>
