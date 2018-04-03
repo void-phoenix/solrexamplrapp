@@ -1,0 +1,3 @@
+{!parent which=docType:product v=$searchLegs}
+
+searchLegs=+({!lucene v=$childText} {!lucene v=$childConcept} {!child of=docType:parent v=$parentLegs})
