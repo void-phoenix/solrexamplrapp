@@ -73,4 +73,8 @@ public class Product {
     public void addSKU(SKU sku){
         skus.add(sku);
     }
+
+    public void setSkus(List<SKU> skus) {
+        this.skus = skus;
+    }
 }

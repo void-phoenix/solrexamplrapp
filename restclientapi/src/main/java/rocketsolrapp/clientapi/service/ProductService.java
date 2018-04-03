@@ -1,5 +1,7 @@
 package rocketsolrapp.clientapi.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.UpdateRequest;
@@ -8,14 +10,19 @@ import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.Product;
 import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.model.SKU;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -44,7 +51,7 @@ public class ProductService {
             product.setPrice((double) solrDocument.getFieldValue("price"));
             product.setTitle((String) solrDocument.getFieldValue("title"));
 
-            for (SolrDocument skuDocument : solrDocument.getChildDocuments()){
+            for (SolrDocument skuDocument : solrDocument.getChildDocuments()) {
                 final SKU sku = new SKU();
                 sku.setId((String) skuDocument.getFieldValue("id"));
                 sku.setColor((String) skuDocument.getFieldValue("color"));
@@ -59,6 +66,13 @@ public class ProductService {
     public void add(Product product) throws SolrServerException, IOException {
         final UpdateRequest request = new UpdateRequest();
         request.add(convertToSolrFormat(product), false);
+        solr.sendSolrRequest(CORE_NAME, request);
+    }
+
+    public void add(List<Product> products) throws SolrServerException, IOException {
+        final UpdateRequest request = new UpdateRequest();
+        List<SolrInputDocument> inputDocuments = products.stream().map(this::convertToSolrFormat).collect(Collectors.toList());
+        request.add(inputDocuments);
         solr.sendSolrRequest(CORE_NAME, request);
     }
 
@@ -116,5 +130,19 @@ public class ProductService {
             productDocument.addChildDocument(skuDocument);
         }
         return productDocument;
+    }
+
+    public void reloadData() throws IOException, SolrServerException{
+        clear();
+        final byte[] content = Files.readAllBytes(Paths.get("embeddedsolr" + File.separator
+                + "src" + File.separator +
+                "main" + File.separator +
+                "resources" + File.separator +
+                "products.json"
+        ));
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final TypeFactory typeFactory = objectMapper.getTypeFactory();
+        final List<Product> products = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Product.class));
+        add(products);
     }
 }

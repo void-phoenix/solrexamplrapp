@@ -8,17 +8,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import rocketsolrapp.clientapi.datauploader.ConceptUploader;
+import rocketsolrapp.clientapi.service.ProductService;
 
 @RestController
-@RequestMapping("/concepts")
+@RequestMapping("/dataload")
 @ResponseStatus(value = HttpStatus.OK)
-public class ConceptController {
+public class DataloadController {
 
     @Autowired
     ConceptUploader conceptUploader;
 
-    @RequestMapping(value = "/reload", method = RequestMethod.GET)
-    public void uploadConcepts() {
+    @Autowired
+    ProductService productService;
+
+    @RequestMapping(value = "/concepts", method = RequestMethod.GET)
+    public void reloadConcepts() {
         conceptUploader.uploadConcepts();
+    }
+
+    @RequestMapping(value = "/products", method = RequestMethod.GET)
+    public void reloadProducts() throws Exception{
+        productService.reloadData();
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public void reloadAll() throws Exception{
+        reloadProducts();
+        reloadConcepts();
     }
 }
