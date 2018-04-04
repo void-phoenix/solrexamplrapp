@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import rocketsolrapp.clientapi.model.Product;
 import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.service.ProductService;
-import rocketsolrapp.clientapi.datauploader.ConceptUploader;
 
 import java.util.List;
 

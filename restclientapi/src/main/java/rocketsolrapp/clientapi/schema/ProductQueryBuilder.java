@@ -2,9 +2,13 @@ package rocketsolrapp.clientapi.schema;
 
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.common.SolrDocumentList;
+import org.apache.solr.common.StringUtils;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.RequestWithParams;
+import rocketsolrapp.clientapi.service.ConceptService;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -21,12 +25,15 @@ public class ProductQueryBuilder {
     private static final String SIZE_CINCEPT = "size_concept";
     private static final String COLOR_CONCEPT = "color_concept";
     private static final String BRAND_CONCEPT = "brand_concept";
-    private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs}";
+    private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs score=max}";
     private static final String PARENT_LEGS_QUERY = "{!dismax v=$keywords qf=$dismaxQueryFields}";
 
     private static final String SOLR_FILTER_QUERY_PARAM = "fq";
 
     private List<Field> fields;
+
+    @Autowired
+    ConceptService conceptService;
 
     @PostConstruct
     private void init() {
@@ -35,23 +42,33 @@ public class ProductQueryBuilder {
         fields.add(new Field(DESCRIPTION, 1.0f, DocType.PRODUCT, FieldType.TEXT));
         fields.add(new Field(COLOR, 1.0f, DocType.SKU, FieldType.TEXT));
         fields.add(new Field(SIZE, 1.0f, DocType.SKU, FieldType.TEXT));
-        fields.add(new Field(SIZE_CINCEPT, 1.0f, DocType.SKU, FieldType.CONCEPT));
-        fields.add(new Field(COLOR_CONCEPT, 1.0f, DocType.SKU, FieldType.CONCEPT));
-        fields.add(new Field(BRAND_CONCEPT, 1.0f, DocType.PRODUCT, FieldType.CONCEPT));
+        fields.add(new Field(SIZE_CINCEPT, 2.0f, DocType.SKU, FieldType.CONCEPT));
+        fields.add(new Field(COLOR_CONCEPT, 3.0f, DocType.SKU, FieldType.CONCEPT));
+        fields.add(new Field(BRAND_CONCEPT, 3.0f, DocType.PRODUCT, FieldType.CONCEPT));
     }
 
-    public SolrQuery buildProductQuery(RequestWithParams requestWithParams) {
+    public SolrQuery buildProductQuery(RequestWithParams requestWithParams) throws Exception{
         ModifiableSolrParams params = new ModifiableSolrParams();
         SolrQuery query = new SolrQuery();
         params.add("q", BASE_QUERY);
-        params.add("searchLegs", "+(" +
-                //"{!lucene v=$childText} " +
-                //TODO uncomment when we have childConcept query buiilder
-                //"{!lucene v=$childConcept} " +
-                "{!child of=docType:product v=$parentLegs})");
+        final StringBuilder searchLegs = new StringBuilder("+(");
 
-        params = addChildTextParam(params);
-        params = addParentLegsParam(params);
+        final String conceptParam = getConceptParam(requestWithParams);
+        if (!StringUtils.isEmpty(conceptParam)) {
+            searchLegs.append("{!lucene v=$childConcept} ");
+            params.add("childConcept", conceptParam);
+        }
+
+        final String disMaxQueryFields = getDisMaxQueryFields(params);
+        if (!StringUtils.isEmpty(disMaxQueryFields)){
+            searchLegs.append("{!child of=docType:product v=$parentLegs score=sum} ");
+            params.add("parentLegs", PARENT_LEGS_QUERY);
+            params.add("dismaxQueryFields", disMaxQueryFields);
+        }
+
+        searchLegs.append(")");
+        params.add("searchLegs", searchLegs.toString());
+
         params = addChildTransformer(params);
         params = addFilters(params, requestWithParams.getFilter());
         params.add("keywords", requestWithParams.getKeywords());
@@ -61,9 +78,17 @@ public class ProductQueryBuilder {
 
     }
 
-    private ModifiableSolrParams addChildTextParam(ModifiableSolrParams params) {
+    private String getConceptParam(RequestWithParams requestWithParams) throws Exception{
 
-        return params;
+        final SolrDocumentList concepts = conceptService.getConcepts(requestWithParams.getKeywords());
+
+        final String conceptQuery = concepts.stream().map(c -> {
+            final String field = (String) c.get("field");
+            final String boost = getConceptBoost(field);
+            if (boost == null) return "";
+            else return "+" + field + ":" + c.get("searchTerms") + boost;
+        }).collect(Collectors.joining(" "));
+        return conceptQuery;
     }
 
     private ModifiableSolrParams addChildTransformer(ModifiableSolrParams params) {
@@ -79,12 +104,9 @@ public class ProductQueryBuilder {
         return params;
     }
 
-    private ModifiableSolrParams addParentLegsParam(ModifiableSolrParams params) {
-        params.add("parentLegs", PARENT_LEGS_QUERY);
-        final String dismaxQueryFields = getProductTextFields().stream().map(sku -> sku.getName() + "^" + sku.getWeight())
+    private String getDisMaxQueryFields(ModifiableSolrParams params) {
+        return getProductTextFields().stream().map(sku -> sku.getName() + "^" + sku.getWeight())
                 .collect(Collectors.joining(" "));
-        params.add("dismaxQueryFields", dismaxQueryFields);
-        return params;
     }
 
 
@@ -113,5 +135,14 @@ public class ProductQueryBuilder {
         query.add("facet", "on");
         query.add("facet.field", field);
         return query;
+    }
+
+    public String getConceptBoost(String conceptName) {
+        final List<String> weights = fields.stream()
+                .filter(f -> f.getName().equals(conceptName) && f.getDocType().equals(DocType.SKU))
+                .map(f -> "^" + f.getWeight())
+                .collect(Collectors.toList());
+        if (weights.isEmpty()) return null;
+        else return weights.get(0);
     }
 }

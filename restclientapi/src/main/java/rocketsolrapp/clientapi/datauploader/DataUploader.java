@@ -1,19 +1,32 @@
 package rocketsolrapp.clientapi.datauploader;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrRequest;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.params.ModifiableSolrParams;
+import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rocketsolrapp.clientapi.model.Product;
+import rocketsolrapp.clientapi.model.SolrTaggerRequest;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
+import rocketsolrapp.clientapi.service.ProductService;
 import rocketsolrapp.clientapi.service.SolrRequester;
-import rocketsolrapp.solr.factory.SolrClientFactory;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -22,15 +35,18 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class ConceptUploader {
+public class DataUploader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ConceptUploader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataUploader.class);
 
     @Autowired
     ProductQueryBuilder productQueryBuilder;
 
     @Autowired
     SolrRequester solrRequester;
+
+    @Autowired
+    ProductService productService;
 
     private ExecutorService executorService;
 
@@ -41,7 +57,7 @@ public class ConceptUploader {
         );
     }
 
-    public void uploadConcepts() {
+    public void reloadConcepts() {
         clearConcepts();
         for (String conceptField : productQueryBuilder.getConceptFields()) {
             executorService.submit(new UpdateConceptTask(conceptField));
@@ -101,5 +117,19 @@ public class ConceptUploader {
             LOG.error(ex.getMessage());
         }
 
+    }
+
+    public void reloadProducts() throws IOException, SolrServerException {
+        productService.clear();
+        final byte[] content = Files.readAllBytes(Paths.get("embeddedsolr" + File.separator
+                + "src" + File.separator +
+                "main" + File.separator +
+                "resources" + File.separator +
+                "products.json"
+        ));
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final TypeFactory typeFactory = objectMapper.getTypeFactory();
+        final List<Product> products = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Product.class));
+        productService.add(products);
     }
 }

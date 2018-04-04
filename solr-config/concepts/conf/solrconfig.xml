@@ -133,6 +133,12 @@
 
     <searchComponent name="bjqDocsetFacetComponent" class="org.apache.solr.search.join.BlockJoinDocSetFacetComponent"/>
 
+    <requestHandler name="/concepts" class="org.opensextant.solrtexttagger.TaggerRequestHandler">
+        <lst name="defaults">
+            <str name="field">searchTerms</str>
+            <!--<str name="fq">PUT SOME SOLR QUERY HERE; OPTIONAL</str>-->
+        </lst>
+    </requestHandler>
 
     <requestHandler name="/spell" class="solr.SearchHandler" startup="lazy">
         <lst name="defaults">
@@ -195,4 +201,5 @@
     <queryResponseWriter name="xslt" class="solr.XSLTResponseWriter">
         <int name="xsltCacheLifetimeSeconds">5</int>
     </queryResponseWriter>
+
 </config>

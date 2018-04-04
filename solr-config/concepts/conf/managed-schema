@@ -3,7 +3,7 @@
 <schema name="exampleCollection" version="1.6">
   <uniqueKey>id</uniqueKey>
 
-  <field name="id" type="uuid" indexed="true" stored="true" required="true"/>
+  <field name="id" type="uuid" indexed="true" stored="true" required="true" docValues="true"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="field" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
   <field name="searchTerms" type="concept" multiValued="false" indexed="true" stored="true"/>
