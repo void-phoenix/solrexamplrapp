@@ -2,9 +2,11 @@ package rocketsolrapp.clientapi.schema;
 
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.StringUtils;
 import org.apache.solr.common.params.ModifiableSolrParams;
+import org.apache.solr.common.util.NamedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.RequestWithParams;
@@ -80,7 +82,9 @@ public class ProductQueryBuilder {
 
     private String getConceptParam(RequestWithParams requestWithParams) throws Exception{
 
-        final SolrDocumentList concepts = conceptService.getConcepts(requestWithParams.getKeywords());
+        final NamedList conceptResponce = conceptService.getConcepts(requestWithParams.getKeywords());
+        final SolrDocumentList concepts = (SolrDocumentList) conceptResponce.get("response");
+        final List<String> matchTokens = new ArrayList<>();
 
         final String conceptQuery = concepts.stream().map(c -> {
             final String field = (String) c.get("field");
@@ -88,6 +92,13 @@ public class ProductQueryBuilder {
             if (boost == null) return "";
             else return field + ":" + c.get("searchTerms") + boost;
         }).collect(Collectors.joining(" "));
+
+
+        final List<NamedList> tags = (List<NamedList>) conceptResponce.get("tags");
+        for (NamedList tag : tags) {
+            final String mathcedText = (String) tag.get("matchText");
+            requestWithParams.setKeywords(requestWithParams.getKeywords().replaceAll(mathcedText, ""));
+        }
         return conceptQuery;
     }
 

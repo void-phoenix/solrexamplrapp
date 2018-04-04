@@ -16,15 +16,15 @@ public class ConceptService {
     @Autowired
     SolrRequester solr;
 
-    public SolrDocumentList getConcepts(String input)  throws Exception {
+    public NamedList getConcepts(String input)  throws Exception {
         final ModifiableSolrParams params = new ModifiableSolrParams();
         params.set("df", "searchTerms");
+        params.set("matchText", "true");
         final SolrTaggerRequest request = new SolrTaggerRequest(params, SolrRequest.METHOD.GET);
         request.setPath("/concepts");
         request.setInput(input);
 
-        final NamedList response = solr.sendSolrRequest( CORE_NAME, request);
-        return (SolrDocumentList) response.get("response");
+        return solr.sendSolrRequest( CORE_NAME, request);
     }
 
 }
