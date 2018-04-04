@@ -8,24 +8,9 @@
     "brand": "Levi's",
     "skus": [
       {
-        "id": "1_1",
-        "size": "small",
-        "color": "Black"
-      },
-      {
         "id": "1_2",
         "size": "medium",
         "color": "Black"
-      },
-      {
-        "id": "1_3",
-        "size": "large",
-        "color": "Blue"
-      },
-      {
-        "id": "1_4",
-        "size": "small",
-        "color": "Blue"
       },
       {
         "id": "1_5",
@@ -48,11 +33,6 @@
     "brand": "Levi's",
     "skus": [
       {
-        "id": "2_1",
-        "size": "small",
-        "color": "Black"
-      },
-      {
         "id": "2_2",
         "size": "medium",
         "color": "Black"
@@ -61,21 +41,6 @@
         "id": "2_3",
         "size": "large",
         "color": "Blue"
-      },
-      {
-        "id": "2_4",
-        "size": "small",
-        "color": "Gray"
-      },
-      {
-        "id": "2_5",
-        "size": "medium",
-        "color": "Gray"
-      },
-      {
-        "id": "2_6",
-        "size": "large",
-        "color": "Black"
       }
     ]
   },
@@ -98,21 +63,6 @@
         "color": "Gray"
       },
       {
-        "id": "3_3",
-        "size": "large",
-        "color": "Gray"
-      },
-      {
-        "id": "3_4",
-        "size": "small",
-        "color": "White"
-      },
-      {
-        "id": "3_5",
-        "size": "medium",
-        "color": "White"
-      },
-      {
         "id": "3_6",
         "size": "large",
         "color": "White"
@@ -133,24 +83,9 @@
         "color": "Red"
       },
       {
-        "id": "4_2",
-        "size": "medium",
-        "color": "Red"
-      },
-      {
         "id": "4_3",
         "size": "large",
         "color": "White"
-      },
-      {
-        "id": "4_4",
-        "size": "small",
-        "color": "Blue"
-      },
-      {
-        "id": "4_5",
-        "size": "medium",
-        "color": "Red"
       },
       {
         "id": "4_6",
@@ -170,7 +105,7 @@
       {
         "id": "5_1",
         "size": "small",
-        "color": "Camel"
+        "color": "Green"
       },
       {
         "id": "5_2",
@@ -178,18 +113,8 @@
         "color": "Camel"
       },
       {
-        "id": "5_3",
-        "size": "large",
-        "color": "Camel"
-      },
-      {
         "id": "5_4",
         "size": "small",
-        "color": "White"
-      },
-      {
-        "id": "5_5",
-        "size": "medium",
         "color": "White"
       },
       {
@@ -208,11 +133,6 @@
     "brand": "PODOM",
     "skus": [
       {
-        "id": "6_1",
-        "size": "small",
-        "color": "Black"
-      },
-      {
         "id": "6_2",
         "size": "medium",
         "color": "Black"
@@ -221,16 +141,6 @@
         "id": "6_3",
         "size": "large",
         "color": "Blue"
-      },
-      {
-        "id": "6_4",
-        "size": "small",
-        "color": "Navy"
-      },
-      {
-        "id": "6_5",
-        "size": "medium",
-        "color": "Navy"
       },
       {
         "id": "6_6",

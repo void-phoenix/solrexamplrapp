@@ -61,7 +61,7 @@ public class ProductQueryBuilder {
 
         final String disMaxQueryFields = getDisMaxQueryFields(params);
         if (!StringUtils.isEmpty(disMaxQueryFields)){
-            searchLegs.append("{!child of=docType:product v=$parentLegs score=sum} ");
+            searchLegs.append("+{!child of=docType:product v=$parentLegs score=sum} ");
             params.add("parentLegs", PARENT_LEGS_QUERY);
             params.add("dismaxQueryFields", disMaxQueryFields);
         }
@@ -86,7 +86,7 @@ public class ProductQueryBuilder {
             final String field = (String) c.get("field");
             final String boost = getConceptBoost(field);
             if (boost == null) return "";
-            else return "+" + field + ":" + c.get("searchTerms") + boost;
+            else return field + ":" + c.get("searchTerms") + boost;
         }).collect(Collectors.joining(" "));
         return conceptQuery;
     }
