@@ -23,6 +23,7 @@ public class ProductQueryBuilder {
     private static final String TITLE = "title";
     private static final String DESCRIPTION = "description";
     private static final String COLOR = "color";
+    private static final String BRAND = "brand";
     private static final String SIZE = "size";
     private static final String SIZE_CINCEPT = "size_concept";
     private static final String COLOR_CONCEPT = "color_concept";
@@ -47,6 +48,7 @@ public class ProductQueryBuilder {
         fields.add(new Field(SIZE_CINCEPT, 2.0f, DocType.SKU, FieldType.CONCEPT));
         fields.add(new Field(COLOR_CONCEPT, 3.0f, DocType.SKU, FieldType.CONCEPT));
         fields.add(new Field(BRAND_CONCEPT, 3.0f, DocType.PRODUCT, FieldType.CONCEPT));
+        fields.add(new Field(BRAND, 1.0f, DocType.PRODUCT, FieldType.TEXT));
     }
 
     public SolrQuery buildProductQuery(RequestWithParams requestWithParams) throws Exception{
@@ -110,7 +112,7 @@ public class ProductQueryBuilder {
 
     private ModifiableSolrParams addFilters(ModifiableSolrParams params, List<String> filter) {
         for (String param : filter) {
-            params.add(SOLR_FILTER_QUERY_PARAM, param);
+            params.add(SOLR_FILTER_QUERY_PARAM, buildFilterQeury(param));
         }
         return params;
     }
@@ -148,6 +150,12 @@ public class ProductQueryBuilder {
         return query;
     }
 
+    private Field findByName(String name) {
+        List<Field> found = fields.stream().filter(f -> f.getName().equals(name)).collect(Collectors.toList());
+        if (found.size() < 1) return null;
+        return found.get(0);
+    }
+
     public String getConceptBoost(String conceptName) {
         final List<String> weights = fields.stream()
                 .filter(f -> f.getName().equals(conceptName) && f.getDocType().equals(DocType.SKU))
@@ -155,5 +163,17 @@ public class ProductQueryBuilder {
                 .collect(Collectors.toList());
         if (weights.isEmpty()) return null;
         else return weights.get(0);
+    }
+
+    private String buildFilterQeury(String queryTerm) {
+        final String[] fieldWithTerm = queryTerm.split(":");
+        if (fieldWithTerm.length != 2 ) return null;
+        final Field field = findByName(fieldWithTerm[0]);
+        if (field == null) return null;
+        if (field.getDocType().equals(DocType.PRODUCT)) {
+            return queryTerm;
+        } else {
+            return "{!parent which=docType:product v=" + queryTerm + "}";
+        }
     }
 }
