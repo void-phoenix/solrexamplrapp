@@ -174,9 +174,28 @@ public class ProductQueryBuilder {
         return params;
     }
 
-    private ModifiableSolrParams addFilters(ModifiableSolrParams params, List<String> filter) {
-        for (String param : filter) {
-            params.add(SOLR_FILTER_QUERY_PARAM, buildFilterQuery(param));
+    private ModifiableSolrParams addFilters(ModifiableSolrParams params, List<String> filters) {
+
+        final Map<String, List<String>> groupedByField = new HashMap<>();
+        for (String filter : filters) {
+            final String key = filter.split(":")[0];
+            groupedByField.putIfAbsent(key, new ArrayList<>());
+            groupedByField.get(key).add(filter);
+        }
+
+        for (Map.Entry<String, List<String>> entry : groupedByField.entrySet()){
+            if (entry.getValue().size() == 1) {
+                final String queryParam = buildFilterQuery(entry.getValue().get(0));
+                params.add(SOLR_FILTER_QUERY_PARAM, queryParam);
+            } else {
+                StringBuilder filterQuery = new StringBuilder("=(");
+                for (String filter : entry.getValue()) {
+                    filterQuery.append(buildFilterQuery(filter));
+                    filterQuery.append(" ");
+                }
+                filterQuery.append(")");
+                params.add(SOLR_FILTER_QUERY_PARAM, filterQuery.toString());
+            }
         }
         return params;
     }

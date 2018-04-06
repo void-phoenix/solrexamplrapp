@@ -1,9 +1,5 @@
 {!parent which=docType:product v=$searchLegs}
-
-
-
-
-searchLegs=+({!lucene v=$childText} {!lucene v=$childConcept} {!child of=docType:parent v=$parentLegs})
+searchLegs=+({!lucene v=$childConcept} {!child of=docType:parent v=$parentLegs})
 
 
 {!parent which=docType:product v=$searchLegs}&childConcept=size_concept:large^10.0 color_concept:green^10.0
