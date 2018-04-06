@@ -33,11 +33,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import static rocketsolrapp.clientapi.service.ConceptService.CONCEPT_TYPE;
+
 
 @Service
 public class DataUploader {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataUploader.class);
+
 
     @Autowired
     ProductQueryBuilder productQueryBuilder;
@@ -98,6 +101,8 @@ public class DataUploader {
                 final SolrInputDocument conceptDocument = new SolrInputDocument();
                 conceptDocument.setField("field", conceptField);
                 conceptDocument.setField("searchTerms", conceptString);
+                conceptDocument.setField("type", CONCEPT_TYPE);
+                conceptDocument.setField("synonyms", conceptString);
                 final UpdateRequest request = new UpdateRequest();
                 request.add(conceptDocument);try {
                     solrRequester.sendSolrRequest("concepts", request);

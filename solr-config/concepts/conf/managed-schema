@@ -6,13 +6,15 @@
   <field name="id" type="uuid" indexed="true" stored="true" required="true" docValues="true"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="field" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
-  <field name="searchTerms" type="concept" multiValued="false" indexed="true" stored="true"/>
+  <field name="searchTerms" type="tag" multiValued="false" indexed="true" stored="true"/>
+  <field name="type" type="string" indexed="true" stored="true" required="true"/>
+  <field name="synonyms" type="tag" indexed="true" stored="true" required="false" multiValued="true"/>
+
 
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
   <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
-
-  <fieldType name="concept" class="solr.TextField" positionIncrementGap="100" postingsFormat="Memory"
+  <fieldType name="tag" class="solr.TextField" positionIncrementGap="100" postingsFormat="Memory"
       omitTermFreqAndPositions="true" omitNorms="true">
     <analyzer type="index">
       <tokenizer class="solr.StandardTokenizerFactory"/>

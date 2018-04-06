@@ -12,6 +12,8 @@ import rocketsolrapp.clientapi.model.SolrTaggerRequest;
 public class ConceptService {
 
     private static final String CORE_NAME = "concepts";
+    public static final String CONCEPT_TYPE = "concept";
+    public static final String SYNONYM_TYPE = "synonym";
 
     @Autowired
     SolrRequester solr;
