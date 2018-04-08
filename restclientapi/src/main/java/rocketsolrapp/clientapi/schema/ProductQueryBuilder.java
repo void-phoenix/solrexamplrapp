@@ -205,12 +205,6 @@ public class ProductQueryBuilder {
                 .collect(Collectors.joining(" "));
     }
 
-    private List<Field> getSkuTextFields() {
-        return fields.stream().filter(f -> f.getDocType().equals(DocType.SKU) &&
-                f.getFieldType().equals(FieldType.TEXT))
-                .collect(Collectors.toList());
-    }
-
     private List<Field> getProductTextFields() {
         return fields.stream().filter(f -> f.getDocType().equals(DocType.PRODUCT) &&
                 f.getFieldType().equals(FieldType.TEXT))

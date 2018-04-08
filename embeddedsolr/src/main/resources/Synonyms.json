@@ -1,66 +1,53 @@
 [
   {
-    "searchTerms": "shirt",
+    "searchTerms": "Red",
     "type": "synonym",
     "synonyms": [
-      "shirt",
-      "style"
+      "Rose",
+      "Pink",
+      "Red"
     ]
   },
   {
-    "searchTerms": "shirt",
+    "searchTerms": "boy",
     "type": "synonym",
     "synonyms": [
-      "shirt",
-      "style"
+      "men",
+      "child",
+      "boy"
     ]
   },
   {
-    "searchTerms": "shirt",
+    "searchTerms": "sport",
     "type": "synonym",
     "synonyms": [
-      "shirt",
-      "style"
+      "fitness",
+      "sport"
     ]
   },
   {
-    "searchTerms": "shirt",
+    "searchTerms": "small",
     "type": "synonym",
     "synonyms": [
-      "shirt",
-      "style"
+      "small",
+      "little",
+      "tiny"
     ]
   },
   {
-    "searchTerms": "shirt",
+    "searchTerms": "Black",
     "type": "synonym",
     "synonyms": [
-      "shirt",
-      "style"
+      "Black",
+      "Dark"
     ]
   },
   {
-    "searchTerms": "shirt",
+    "searchTerms": "hipster",
     "type": "synonym",
     "synonyms": [
-      "shirt",
-      "style"
-    ]
-  },
-  {
-    "searchTerms": "shirt",
-    "type": "synonym",
-    "synonyms": [
-      "shirt",
-      "style"
-    ]
-  },
-  {
-    "searchTerms": "shirt",
-    "type": "synonym",
-    "synonyms": [
-      "shirt",
-      "style"
+      "javascript developer",
+      "hipster"
     ]
   }
 ]
