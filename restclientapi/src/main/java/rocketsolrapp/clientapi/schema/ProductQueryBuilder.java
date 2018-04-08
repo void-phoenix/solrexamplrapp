@@ -29,7 +29,7 @@ public class ProductQueryBuilder {
 
     private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs score=max}";
     private static final String MAX_SCORE_TO_PARENT_QUERY = "+{!lucene v=$maxScoreLegs}";
-    private static final String MAX_SCORE_CONCEPT_QUERY = "{!maxscore v=$conceptLegs}";
+    private static final String MAX_SCORE_CONCEPT_QUERY = "{!lucene v=$conceptLegs}";
 
     private static final String SOLR_FILTER_QUERY_PARAM = "fq";
     @Autowired
@@ -87,7 +87,7 @@ public class ProductQueryBuilder {
 
         searchLegs.append(")");
         params.add("searchLegs", searchLegs.toString());
-        
+
         return params;
     }
 
@@ -272,10 +272,20 @@ public class ProductQueryBuilder {
 
         final SolrDocumentList response = (SolrDocumentList) conceptResponce.get("response");
         final Map<String, List<String>> concepts = new HashMap<>();
+        final Map<String, String> mapping = new HashMap<>();
+        final List<NamedList> tags = (List<NamedList>) conceptResponce.get("tags");
+        for (NamedList tag : tags) {
+            final List<String> ids = (List<String> )tag.get("ids");
+            final String matchText = (String) tag.get("matchText");
+            for (String id : ids ) {
+                mapping.putIfAbsent(id, matchText);
+            }
+        }
         response.stream()
                 .filter(c -> c.getFieldValue("type").equals(ConceptService.SYNONYM_TYPE))
                 .forEach(c -> {
-                    final String from = (String) c.get("searchTerms");
+                    final String id = (String) c.get("id");
+                    final String from = mapping.get(id);
                     final List<String> synonyms = (List<String>) c.get("synonyms");
                     concepts.putIfAbsent(from, synonyms);
                 });
