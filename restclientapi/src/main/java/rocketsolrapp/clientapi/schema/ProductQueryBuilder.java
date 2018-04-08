@@ -28,7 +28,7 @@ public class ProductQueryBuilder {
     private static final String BRAND_CONCEPT = "brand_concept";
 
     private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs score=max}";
-    private static final String MAX_SCORE_TO_PARENT_QUERY = "+{!maxscore v=$maxScoreLegs}";
+    private static final String MAX_SCORE_TO_PARENT_QUERY = "+{!lucene v=$maxScoreLegs}";
     private static final String MAX_SCORE_CONCEPT_QUERY = "{!maxscore v=$conceptLegs}";
 
     private static final String SOLR_FILTER_QUERY_PARAM = "fq";
@@ -42,7 +42,7 @@ public class ProductQueryBuilder {
             return;
         }
         final List<String> terms = concepts.get(0);
-        final List<List<String>> rest = new ArrayList<List<String>>(concepts);
+        final List<List<String>> rest = new ArrayList<>(concepts);
         rest.remove(terms);
         for (String term : terms) {
             buildConceptCombinations(result, temp + " " + term, rest);
@@ -87,8 +87,7 @@ public class ProductQueryBuilder {
 
         searchLegs.append(")");
         params.add("searchLegs", searchLegs.toString());
-
-        //TODO params.add("keywords", requestWithParams.getKeywords());
+        
         return params;
     }
 

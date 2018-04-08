@@ -16,7 +16,7 @@ public class DataloadController {
     DataUploader dataUploader;
 
     @RequestMapping(value = "/concepts", method = RequestMethod.GET)
-    public void reloadConcepts() {
+    public void reloadConcepts() throws Exception {
         dataUploader.reloadConcepts();
     }
 

@@ -3,30 +3,32 @@ package rocketsolrapp.clientapi.datauploader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import rocketsolrapp.clientapi.model.Concept;
 import rocketsolrapp.clientapi.model.Product;
-import rocketsolrapp.clientapi.model.SolrTaggerRequest;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
+import rocketsolrapp.clientapi.service.ConceptService;
 import rocketsolrapp.clientapi.service.ProductService;
 import rocketsolrapp.clientapi.service.SolrRequester;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +53,9 @@ public class DataUploader {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ConceptService conceptService;
+
     private ExecutorService executorService;
 
     @PostConstruct
@@ -60,11 +65,39 @@ public class DataUploader {
         );
     }
 
-    public void reloadConcepts() {
+    public void reloadConcepts() throws Exception{
         clearConcepts();
+        loadSynonyms();
         for (String conceptField : productQueryBuilder.getConceptFields()) {
             executorService.submit(new UpdateConceptTask(conceptField));
         }
+    }
+
+    private void clearConcepts() throws Exception{
+        final UpdateRequest request = new UpdateRequest();
+        request.deleteByQuery("*:*");
+        try {
+            solrRequester.sendSolrRequest("concepts", request);
+        } catch (Exception ex) {
+            LOG.error(ex.getMessage());
+        }
+    }
+
+    private void loadSynonyms() throws Exception {
+        final InputStream content =getResourceByName("synonyms.json");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final TypeFactory typeFactory = objectMapper.getTypeFactory();
+        final List<Concept> synonyms = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Concept.class));
+        conceptService.add(synonyms);
+    }
+
+    public void reloadProducts() throws IOException, SolrServerException {
+        productService.clear();
+        final InputStream content =getResourceByName("products.json");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final TypeFactory typeFactory = objectMapper.getTypeFactory();
+        final List<Product> products = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Product.class));
+        productService.add(products);
     }
 
     class UpdateConceptTask implements Runnable {
@@ -98,43 +131,50 @@ public class DataUploader {
 
         private void updateConceptCore(List<String> concepts) {
             concepts.forEach(conceptString -> {
+                final List<String> synonims = getSynonyms(conceptString);
                 final SolrInputDocument conceptDocument = new SolrInputDocument();
                 conceptDocument.setField("field", conceptField);
                 conceptDocument.setField("searchTerms", conceptString);
                 conceptDocument.setField("type", CONCEPT_TYPE);
-                conceptDocument.setField("synonyms", conceptString);
+                conceptDocument.setField("synonyms", synonims);
                 final UpdateRequest request = new UpdateRequest();
-                request.add(conceptDocument);try {
+                request.add(conceptDocument);
+                try {
                     solrRequester.sendSolrRequest("concepts", request);
                 } catch (Exception ex) {
                     LOG.error(ex.getMessage());
                 }
             });
         }
-    }
-
-    private void clearConcepts(){
-        final UpdateRequest request = new UpdateRequest();
-        request.deleteByQuery("*:*");
-        try {
-            solrRequester.sendSolrRequest("concepts", request);
-        } catch (Exception ex) {
-            LOG.error(ex.getMessage());
+        private List<String> getSynonyms(String concept){
+            final List<String> result = new ArrayList<>();
+            try {
+                NamedList synonymsResponce = conceptService.getSynonyms(concept);
+                final SolrDocumentList response = (SolrDocumentList) synonymsResponce.get("response");
+                if (response.isEmpty()) {
+                    result.add(concept);
+                } else {
+                    final SolrDocument document = response.get(0);
+                    final List<String> synonyms = (List<String>) document.get("synonyms");
+                    result.addAll(synonyms);
+                }
+            } catch (Exception ex) {
+                LOG.error(ex.getMessage());
+                if (result.isEmpty()) {
+                    result.add(concept);
+                }
+            }
+            return result;
         }
-
     }
 
-    public void reloadProducts() throws IOException, SolrServerException {
-        productService.clear();
-        final byte[] content = Files.readAllBytes(Paths.get("embeddedsolr" + File.separator
-                + "src" + File.separator +
+    private InputStream getResourceByName(String name) throws IOException{
+        final String resoutcePath = "embeddedsolr" + File.separator +
+                "src" + File.separator +
                 "main" + File.separator +
                 "resources" + File.separator +
-                "products.json"
-        ));
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final TypeFactory typeFactory = objectMapper.getTypeFactory();
-        final List<Product> products = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Product.class));
-        productService.add(products);
+                name;
+
+        return Files.newInputStream(Paths.get(resoutcePath ));
     }
 }

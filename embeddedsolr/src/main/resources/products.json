@@ -125,6 +125,36 @@
     ]
   },
   {
+    "id": "9",
+    "price": 16.99,
+    "title": "DAVID.ANN Mens Javascript Hip Hop Pullover Longline Side Zipper Long Sleeve Hooded T Shirt",
+    "description": "65% Cotton, 35% Spandex Imported; Machine wash. Plus long designed;Side zipper Long sleeve hooded shirt; Hooded with drawstring cord NOTICE: Before order, please refer to the Size Chart in description or image (Not the Amazon size chart)",
+    "department": "Men",
+    "brand": "DAVID.ANN",
+    "skus": [
+      {
+        "id": "9_1",
+        "size": "little",
+        "color": "Rose"
+      },
+      {
+        "id": "9_2",
+        "size": "medium",
+        "color": "Pink"
+      },
+      {
+        "id": "9_4",
+        "size": "small",
+        "color": "White"
+      },
+      {
+        "id": "9_6",
+        "size": "large",
+        "color": "White"
+      }
+    ]
+  },
+  {
     "id": "6",
     "price": 17.84,
     "title": "PODOM Men's Long Sleeve Hoodies Hooded Sweatshirts Tee Shirts Cotton V Neck Tops",
