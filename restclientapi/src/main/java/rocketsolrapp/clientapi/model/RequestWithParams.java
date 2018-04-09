@@ -9,6 +9,8 @@ public class RequestWithParams {
 
     private List<String> filter = new ArrayList<>();
 
+    private List<String> sort = new ArrayList<>();
+
     public String getKeywords() {
         return keywords;
     }
@@ -23,5 +25,13 @@ public class RequestWithParams {
 
     public void setFilter(List<String> filter) {
         this.filter = filter;
+    }
+
+    public List<String> getSort() {
+        return sort;
+    }
+
+    public void setSort(List<String> sort) {
+        this.sort = sort;
     }
 }

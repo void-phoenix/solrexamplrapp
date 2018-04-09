@@ -16,6 +16,7 @@ public class Product {
     private String department;
     private String brand;
     private String score;
+    private double rating;
 
     List<SKU> skus = new ArrayList<>();
 
@@ -85,5 +86,13 @@ public class Product {
 
     public void setScore(String score) {
         this.score = score;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

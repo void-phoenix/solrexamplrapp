@@ -25,10 +25,12 @@ public class ProductQueryBuilder {
     private static final String DESCRIPTION = "description";
     private static final String COLOR = "color";
     private static final String BRAND = "brand";
+    private static final String RATING = "rating";
     private static final String SIZE = "size";
     private static final String SIZE_CINCEPT = "size_concept";
     private static final String COLOR_CONCEPT = "color_concept";
     private static final String BRAND_CONCEPT = "brand_concept";
+    private static final String PRICE = "price";
 
     private static final String BASE_QUERY = "{!parent which=docType:product v=$searchLegs score=max}";
     private static final String MAX_SCORE_TO_PARENT_QUERY = "+{!lucene v=$maxScoreLegs}";
@@ -38,10 +40,13 @@ public class ProductQueryBuilder {
     ConceptService conceptService;
 
     @Autowired
-    FacetService facetService;
+    FacetQueryService facetService;
 
     @Autowired
     FilterService filterService;
+
+    @Autowired
+    SortQueryService sortService;
 
     private List<Field> fields;
 
@@ -89,6 +94,8 @@ public class ProductQueryBuilder {
         fields.add(new Field(COLOR_CONCEPT, 3.0f, DocType.SKU, FieldType.CONCEPT));
         fields.add(new Field(BRAND_CONCEPT, 3.0f, DocType.PRODUCT, FieldType.CONCEPT));
         fields.add(new Field(BRAND, 1.0f, DocType.PRODUCT, FieldType.FACET));
+        fields.add(new Field(PRICE, 1.0f, DocType.PRODUCT, FieldType.SORT_FIELD));
+        fields.add(new Field(RATING, 1.0f, DocType.PRODUCT, FieldType.SORT_FIELD));
     }
 
     public SolrQuery buildProductQuery(RequestWithParams requestWithParams) throws Exception {
@@ -100,6 +107,7 @@ public class ProductQueryBuilder {
         params = addChildTransformer(params);
         params = filterService.addFilters(params, requestWithParams.getFilter(), fields);
         params = addFacets(params, requestWithParams);
+        params = sortService.addSort(params, requestWithParams, fields);
         query.add(params);
 
         return query;
@@ -292,7 +300,7 @@ public class ProductQueryBuilder {
         final String facetRequest = facetService.buildFacetRequestPart(requestWithParams,
                 getChildFacetFields(),
                 getParentFacetFields());
-        params.add(FacetService.FACET_PARAM, facetRequest);
+        params.add(FacetQueryService.FACET_PARAM, facetRequest);
         return params;
     }
 

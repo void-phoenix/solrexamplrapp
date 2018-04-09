@@ -3,17 +3,16 @@ package rocketsolrapp.clientapi.service;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.UpdateRequest;
-import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.util.NamedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.*;
-import rocketsolrapp.clientapi.schema.FacetService;
+import rocketsolrapp.clientapi.schema.FacetQueryService;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
+import rocketsolrapp.clientapi.schema.SortQueryService;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,7 +30,7 @@ public class ProductService {
     ProductQueryBuilder productRequestbuilder;
 
     @Autowired
-    FacetService facetService;
+    FacetQueryService facetService;
 
     public SearchResponse query(RequestWithParams request) throws Exception {
         final SearchResponse searchResponse = new SearchResponse();
@@ -104,6 +103,7 @@ public class ProductService {
         productDocument.setField("title", product.getTitle());
         productDocument.setField("description", product.getDescription());
         productDocument.setField("department", product.getDepartment());
+        productDocument.setField("rating", product.getRating());
         for (SKU sku : product.getSkus()) {
             SolrInputDocument skuDocument = new SolrInputDocument();
 
@@ -127,6 +127,7 @@ public class ProductService {
             product.setDescription((String) solrDocument.getFieldValue("description"));
             product.setPrice((double) solrDocument.getFieldValue("price"));
             product.setTitle((String) solrDocument.getFieldValue("title"));
+            product.setRating((double) solrDocument.getFieldValue("rating"));
             if (solrDocument.containsKey("score")) {
                 product.setScore(String.valueOf((float) solrDocument.getFieldValue("score")));
             }

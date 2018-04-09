@@ -11,6 +11,7 @@
   <field name="docType" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="id" type="string" docValues="true" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="price" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="rating" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="title" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
 

@@ -2,7 +2,7 @@ package rocketsolrapp.clientapi.schema;
 
 public enum FieldType {
     TEXT,
-    PRICE,
+    SORT_FIELD,
     CONCEPT,
     FACET
 }

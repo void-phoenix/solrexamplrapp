@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FacetService {
+public class FacetQueryService {
 
     public static final String FACET_PARAM = "json.facet";
 
@@ -78,7 +78,6 @@ public class FacetService {
         final ObjectNode domain = mapper.createObjectNode();
         domain.put("blockChildren", "docType:product");
 
-        //TODO what level?
         domain.put("excludeTags", fieldName.toUpperCase());
 
         facet.set("domain", domain);
