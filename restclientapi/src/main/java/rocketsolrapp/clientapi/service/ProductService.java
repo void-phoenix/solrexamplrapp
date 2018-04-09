@@ -12,6 +12,7 @@ import org.apache.solr.common.util.NamedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.*;
+import rocketsolrapp.clientapi.schema.FacetService;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
 
 import java.io.IOException;
@@ -29,54 +30,18 @@ public class ProductService {
     @Autowired
     ProductQueryBuilder productRequestbuilder;
 
+    @Autowired
+    FacetService facetService;
+
     public SearchResponse query(RequestWithParams request) throws Exception {
         final SearchResponse searchResponse = new SearchResponse();
-
-        final List<Product> result = new ArrayList<>();
         final SolrQuery query = productRequestbuilder.buildProductQuery(request);
 
         final QueryResponse response = solr.executeQuery(CORE_NAME, query);
 
-        for (SolrDocument solrDocument : response.getResults()) {
-            final Product product = new Product();
-            product.setId((String) solrDocument.getFieldValue("id"));
-            product.setBrand((String) solrDocument.getFieldValue("brand"));
-            product.setDepartment((String) solrDocument.getFieldValue("department"));
-            product.setDescription((String) solrDocument.getFieldValue("description"));
-            product.setPrice((double) solrDocument.getFieldValue("price"));
-            product.setTitle((String) solrDocument.getFieldValue("title"));
-            if (solrDocument.containsKey("score")) {
-                product.setScore(String.valueOf((float) solrDocument.getFieldValue("score")));
-            }
-
-            for (SolrDocument skuDocument : solrDocument.getChildDocuments()) {
-                final SKU sku = new SKU();
-                sku.setId((String) skuDocument.getFieldValue("id"));
-                sku.setColor((String) skuDocument.getFieldValue("color"));
-                sku.setSize((String) skuDocument.getFieldValue("size"));
-                product.addSKU(sku);
-            }
-            result.add(product);
-        }
-
+        final List<Product> result = extractProducts(response);
         searchResponse.setProducts(result);
-
-        final List<String> facetFields = productRequestbuilder.getAllFacetFields();
-        final NamedList facetsResponse = (NamedList) response.getResponse().get("facets");
-        final List<Facet> facetResult = new ArrayList<>();
-
-        for (String facetField : facetFields) {
-            Object facetObject = facetsResponse.get(facetField);
-            if (facetObject == null) continue;
-            final Facet facet = new Facet();
-            facet.setField(facetField);
-            ArrayList<NamedList> facetValuesRaw = (ArrayList<NamedList>)((NamedList) facetObject).get("buckets");
-            for (NamedList facetRaw : facetValuesRaw) {
-                facet.addCount((String) facetRaw.get("val"),
-                        (int) facetRaw.get("count"));
-            }
-            facetResult.add(facet);
-        }
+        final List<Facet> facetResult = facetService.extractFacets(response);
 
         searchResponse.setFacets(facetResult);
 
@@ -150,5 +115,32 @@ public class ProductService {
             productDocument.addChildDocument(skuDocument);
         }
         return productDocument;
+    }
+
+    private List<Product> extractProducts(QueryResponse response) {
+        final List<Product> result = new ArrayList<>();
+        for (SolrDocument solrDocument : response.getResults()) {
+            final Product product = new Product();
+            product.setId((String) solrDocument.getFieldValue("id"));
+            product.setBrand((String) solrDocument.getFieldValue("brand"));
+            product.setDepartment((String) solrDocument.getFieldValue("department"));
+            product.setDescription((String) solrDocument.getFieldValue("description"));
+            product.setPrice((double) solrDocument.getFieldValue("price"));
+            product.setTitle((String) solrDocument.getFieldValue("title"));
+            if (solrDocument.containsKey("score")) {
+                product.setScore(String.valueOf((float) solrDocument.getFieldValue("score")));
+            }
+
+            for (SolrDocument skuDocument : solrDocument.getChildDocuments()) {
+                final SKU sku = new SKU();
+                sku.setId((String) skuDocument.getFieldValue("id"));
+                sku.setColor((String) skuDocument.getFieldValue("color"));
+                sku.setSize((String) skuDocument.getFieldValue("size"));
+                product.addSKU(sku);
+            }
+            result.add(product);
+        }
+
+        return result;
     }
 }
