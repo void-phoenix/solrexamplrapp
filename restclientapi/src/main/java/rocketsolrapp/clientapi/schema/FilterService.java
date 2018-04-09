@@ -15,10 +15,6 @@ public class FilterService {
 
     private static final String SOLR_FILTER_QUERY_PARAM = "fq";
 
-    //TODO refactor
-
-    //TODO add tags
-
     public ModifiableSolrParams addFilters(ModifiableSolrParams params, List<String> filters, List<Field> fields) {
 
         final Map<String, List<String>> groupedByField = groupByFields(filters);

@@ -78,6 +78,9 @@ public class FacetService {
         final ObjectNode domain = mapper.createObjectNode();
         domain.put("blockChildren", "docType:product");
 
+        //TODO what level?
+        domain.put("excludeTags", fieldName.toUpperCase());
+
         facet.set("domain", domain);
 
         final ObjectNode nestedFacet = mapper.createObjectNode();
@@ -109,6 +112,7 @@ public class FacetService {
 
         final ObjectNode domain = mapper.createObjectNode();
         domain.put("filter", "docType:product");
+        domain.put("excludeTags", fieldName.toUpperCase());
 
         facet.set("domain", domain);
         return facet;
