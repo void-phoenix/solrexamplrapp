@@ -6,9 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import rocketsolrapp.clientapi.model.Product;
 import rocketsolrapp.clientapi.model.RequestWithParams;
+import rocketsolrapp.clientapi.model.SearchResponse;
 import rocketsolrapp.clientapi.service.ProductService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/query")
@@ -19,7 +18,7 @@ public class ProductController {
     ProductService productService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Product> query(@ModelAttribute RequestWithParams requestWithParams)
+    public SearchResponse query(@ModelAttribute RequestWithParams requestWithParams)
             throws Exception {
         return productService.query(requestWithParams);
     }

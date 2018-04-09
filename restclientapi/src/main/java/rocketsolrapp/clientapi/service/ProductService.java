@@ -3,15 +3,15 @@ package rocketsolrapp.clientapi.service;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.UpdateRequest;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.util.NamedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rocketsolrapp.clientapi.model.Product;
-import rocketsolrapp.clientapi.model.RequestWithParams;
-import rocketsolrapp.clientapi.model.SKU;
+import rocketsolrapp.clientapi.model.*;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
 
 import java.io.IOException;
@@ -29,7 +29,8 @@ public class ProductService {
     @Autowired
     ProductQueryBuilder productRequestbuilder;
 
-    public List<Product> query(RequestWithParams request) throws Exception {
+    public SearchResponse query(RequestWithParams request) throws Exception {
+        final SearchResponse searchResponse = new SearchResponse();
 
         final List<Product> result = new ArrayList<>();
         final SolrQuery query = productRequestbuilder.buildProductQuery(request);
@@ -57,7 +58,29 @@ public class ProductService {
             }
             result.add(product);
         }
-        return result;
+
+        searchResponse.setProducts(result);
+
+        final List<String> facetFields = productRequestbuilder.getAllFacetFields();
+        final NamedList facetsResponse = (NamedList) response.getResponse().get("facets");
+        final List<Facet> facetResult = new ArrayList<>();
+
+        for (String facetField : facetFields) {
+            Object facetObject = facetsResponse.get(facetField);
+            if (facetObject == null) continue;
+            final Facet facet = new Facet();
+            facet.setField(facetField);
+            ArrayList<NamedList> facetValuesRaw = (ArrayList<NamedList>)((NamedList) facetObject).get("buckets");
+            for (NamedList facetRaw : facetValuesRaw) {
+                facet.addCount((String) facetRaw.get("val"),
+                        (int) facetRaw.get("count"));
+            }
+            facetResult.add(facet);
+        }
+
+        searchResponse.setFacets(facetResult);
+
+        return searchResponse;
     }
 
     public void add(Product product) throws SolrServerException, IOException {

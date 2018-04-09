@@ -12,7 +12,10 @@ import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.service.ConceptService;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,10 @@ public class ProductQueryBuilder {
     private static final String SOLR_FILTER_QUERY_PARAM = "fq";
     @Autowired
     ConceptService conceptService;
+
+    @Autowired
+    FacetService facetService;
+
     private List<Field> fields;
 
     private static void buildConceptCombinations(List<String> result, String temp, List<List<String>> concepts) {
@@ -49,17 +56,37 @@ public class ProductQueryBuilder {
         }
     }
 
+    private static void buildPhrases(List<String> result, String keywords, Map<String, List<String>> concepts) {
+
+        if (concepts.isEmpty()) {
+            result.add(keywords);
+            return;
+        }
+
+        final String term = (String) concepts.keySet().toArray()[0];
+        final List<String> synonyms = concepts.get(term);
+
+        final Map<String, List<String>> rest = new HashMap<>(concepts);
+        rest.remove(term);
+        for (String synonym : synonyms) {
+            buildPhrases(
+                    result,
+                    keywords.replaceAll(term, synonym),
+                    rest);
+        }
+    }
+
     @PostConstruct
     private void init() {
         fields = new ArrayList<>();
-        fields.add(new Field(TITLE, 2.0f, DocType.PRODUCT, FieldType.TEXT));
+        fields.add(new Field(TITLE, 1.0f, DocType.PRODUCT, FieldType.TEXT));
         fields.add(new Field(DESCRIPTION, 1.0f, DocType.PRODUCT, FieldType.TEXT));
-        fields.add(new Field(COLOR, 1.0f, DocType.SKU, FieldType.TEXT));
-        fields.add(new Field(SIZE, 1.0f, DocType.SKU, FieldType.TEXT));
+        fields.add(new Field(COLOR, 1.0f, DocType.SKU, FieldType.FACET));
+        fields.add(new Field(SIZE, 1.0f, DocType.SKU, FieldType.FACET));
         fields.add(new Field(SIZE_CINCEPT, 2.0f, DocType.SKU, FieldType.CONCEPT));
         fields.add(new Field(COLOR_CONCEPT, 3.0f, DocType.SKU, FieldType.CONCEPT));
         fields.add(new Field(BRAND_CONCEPT, 3.0f, DocType.PRODUCT, FieldType.CONCEPT));
-        fields.add(new Field(BRAND, 1.0f, DocType.PRODUCT, FieldType.TEXT));
+        fields.add(new Field(BRAND, 1.0f, DocType.PRODUCT, FieldType.FACET));
     }
 
     public SolrQuery buildProductQuery(RequestWithParams requestWithParams) throws Exception {
@@ -70,6 +97,7 @@ public class ProductQueryBuilder {
         params = buildSearchLegs(requestWithParams, params);
         params = addChildTransformer(params);
         params = addFilters(params, requestWithParams.getFilter());
+        params = addFacets(params, requestWithParams);
         query.add(params);
 
         return query;
@@ -182,7 +210,7 @@ public class ProductQueryBuilder {
             groupedByField.get(key).add(filter);
         }
 
-        for (Map.Entry<String, List<String>> entry : groupedByField.entrySet()){
+        for (Map.Entry<String, List<String>> entry : groupedByField.entrySet()) {
             if (entry.getValue().size() == 1) {
                 final String queryParam = buildFilterQuery(entry.getValue().get(0));
                 params.add(SOLR_FILTER_QUERY_PARAM, queryParam);
@@ -275,9 +303,9 @@ public class ProductQueryBuilder {
         final Map<String, String> mapping = new HashMap<>();
         final List<NamedList> tags = (List<NamedList>) conceptResponce.get("tags");
         for (NamedList tag : tags) {
-            final List<String> ids = (List<String> )tag.get("ids");
+            final List<String> ids = (List<String>) tag.get("ids");
             final String matchText = (String) tag.get("matchText");
-            for (String id : ids ) {
+            for (String id : ids) {
                 mapping.putIfAbsent(id, matchText);
             }
         }
@@ -296,23 +324,34 @@ public class ProductQueryBuilder {
         return result;
     }
 
-    private static void buildPhrases(List<String> result, String keywords, Map<String, List<String>> concepts) {
+    private ModifiableSolrParams addFacets(ModifiableSolrParams params, RequestWithParams requestWithParams) throws Exception {
+        final String facetRequest = facetService.buildFacetRequestPart(requestWithParams,
+                getChildFacetFields(),
+                getParentFacetFields());
+        params.add(FacetService.FACET_PARAM, facetRequest);
+        return params;
+    }
 
-        if (concepts.isEmpty()) {
-            result.add(keywords);
-            return;
-        }
+    public List<String> getAllFacetFields(){
+        final List<String> result = getParentFacetFields();
+        result.addAll(getChildFacetFields());
+        return result;
+    }
 
-        final String term = (String) concepts.keySet().toArray()[0];
-        final List<String> synonyms = concepts.get(term);
+    public List<String> getChildFacetFields() {
+        return getFacetFields(DocType.SKU);
+    }
 
-        final Map<String, List<String>> rest = new HashMap<>(concepts);
-        rest.remove(term);
-        for (String synonym : synonyms) {
-            buildPhrases(
-                    result,
-                    keywords.replaceAll(term, synonym),
-                    rest);
-        }
+
+    public List<String> getParentFacetFields() {
+        return getFacetFields(DocType.PRODUCT);
+    }
+
+    private List<String> getFacetFields(DocType docType) {
+        return fields.stream().
+                filter(f -> f.getFieldType().equals(FieldType.FACET) &&
+                f.getDocType().equals(docType))
+                .map(Field::getName)
+                .collect(Collectors.toList());
     }
 }
