@@ -34,12 +34,14 @@ public class ProductQueryBuilder {
     private static final String MAX_SCORE_TO_PARENT_QUERY = "+{!lucene v=$maxScoreLegs}";
     private static final String MAX_SCORE_CONCEPT_QUERY = "{!lucene v=$conceptLegs}";
 
-    private static final String SOLR_FILTER_QUERY_PARAM = "fq";
     @Autowired
     ConceptService conceptService;
 
     @Autowired
     FacetService facetService;
+
+    @Autowired
+    FilterService filterService;
 
     private List<Field> fields;
 
@@ -96,7 +98,7 @@ public class ProductQueryBuilder {
         params.add("q", BASE_QUERY);
         params = buildSearchLegs(requestWithParams, params);
         params = addChildTransformer(params);
-        params = addFilters(params, requestWithParams.getFilter());
+        params = filterService.addFilters(params, requestWithParams.getFilter(), fields);
         params = addFacets(params, requestWithParams);
         query.add(params);
 
@@ -201,31 +203,7 @@ public class ProductQueryBuilder {
         return params;
     }
 
-    private ModifiableSolrParams addFilters(ModifiableSolrParams params, List<String> filters) {
 
-        final Map<String, List<String>> groupedByField = new HashMap<>();
-        for (String filter : filters) {
-            final String key = filter.split(":")[0];
-            groupedByField.putIfAbsent(key, new ArrayList<>());
-            groupedByField.get(key).add(filter);
-        }
-
-        for (Map.Entry<String, List<String>> entry : groupedByField.entrySet()) {
-            if (entry.getValue().size() == 1) {
-                final String queryParam = buildFilterQuery(entry.getValue().get(0));
-                params.add(SOLR_FILTER_QUERY_PARAM, queryParam);
-            } else {
-                StringBuilder filterQuery = new StringBuilder("=(");
-                for (String filter : entry.getValue()) {
-                    filterQuery.append(buildFilterQuery(filter));
-                    filterQuery.append(" ");
-                }
-                filterQuery.append(")");
-                params.add(SOLR_FILTER_QUERY_PARAM, filterQuery.toString());
-            }
-        }
-        return params;
-    }
 
     private String getDisMaxQueryFields(ModifiableSolrParams params) {
         return getProductTextFields().stream().map(sku -> sku.getName() + "^" + sku.getWeight())
@@ -253,11 +231,7 @@ public class ProductQueryBuilder {
         return query;
     }
 
-    private Field findByName(String name) {
-        List<Field> found = fields.stream().filter(f -> f.getName().equals(name)).collect(Collectors.toList());
-        if (found.size() < 1) return null;
-        return found.get(0);
-    }
+
 
     public String getConceptBoost(String conceptName) {
         final List<String> weights = fields.stream()
@@ -268,17 +242,7 @@ public class ProductQueryBuilder {
         else return weights.get(0);
     }
 
-    private String buildFilterQuery(String queryTerm) {
-        final String[] fieldWithTerm = queryTerm.split(":");
-        if (fieldWithTerm.length != 2) return null;
-        final Field field = findByName(fieldWithTerm[0]);
-        if (field == null) return null;
-        if (field.getDocType().equals(DocType.PRODUCT)) {
-            return queryTerm;
-        } else {
-            return "{!parent which=docType:product v=" + queryTerm + "}";
-        }
-    }
+
 
     private void buildMaxScoreLegs(String keywords, ModifiableSolrParams params, NamedList conceptResponce) {
 
