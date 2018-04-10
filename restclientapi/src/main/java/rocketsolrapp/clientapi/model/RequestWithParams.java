@@ -9,7 +9,7 @@ public class RequestWithParams {
 
     private List<String> filter = new ArrayList<>();
 
-    private List<String> sort = new ArrayList<>();
+    private Integer sortKey;
 
     public String getKeywords() {
         return keywords;
@@ -27,11 +27,11 @@ public class RequestWithParams {
         this.filter = filter;
     }
 
-    public List<String> getSort() {
-        return sort;
+    public Integer getSortKey() {
+        return sortKey;
     }
 
-    public void setSort(List<String> sort) {
-        this.sort = sort;
+    public void setSortKey(Integer sortKey) {
+        this.sortKey = sortKey;
     }
 }

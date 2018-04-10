@@ -107,7 +107,7 @@ public class ProductQueryBuilder {
         params = addChildTransformer(params);
         params = filterService.addFilters(params, requestWithParams.getFilter(), fields);
         params = addFacets(params, requestWithParams);
-        params = sortService.addSort(params, requestWithParams, fields);
+        params = sortService.addSort(params, requestWithParams);
         query.add(params);
 
         return query;

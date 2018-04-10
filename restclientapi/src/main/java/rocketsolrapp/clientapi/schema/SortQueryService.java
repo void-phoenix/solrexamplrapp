@@ -5,7 +5,10 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.RequestWithParams;
 
+import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,62 +16,26 @@ import java.util.stream.Stream;
 @Service
 public class SortQueryService {
 
-    public ModifiableSolrParams addSort(ModifiableSolrParams params,
-                                        RequestWithParams requestWithParams,
-                                        List<Field> fields) {
+    private Map<Integer, String> sortOptions;
 
-        List<String> sortRawParam = requestWithParams.getSort();
-        if (sortRawParam.isEmpty()) return params;
-        Set<String> fieldNames = fields.stream()
-                .filter(f -> f.getFieldType().equals(FieldType.SORT_FIELD))
-                .map(Field::getName)
-                .collect(Collectors.toSet());
-
-       String sortQuety = sortRawParam.stream()
-                .flatMap(p -> {
-                    if (p.contains(",")) {
-                        return Stream.of(p.split(","));
-                    } else {
-                        return Stream.of(p);
-                    }
-                })
-                .map(p -> {
-                    String[] fieldWithOrder = p.split(" ");
-                    return new SortParam(fieldWithOrder);
-                })
-                .filter(e -> fieldNames.contains(e.getField()))
-                .map(e -> e.getField() + " " + e.getOrder())
-                .collect(Collectors.joining(","));
-
-        params.add("sort", sortQuety);
-        return params;
+    @PostConstruct
+    private void init(){
+        sortOptions = new HashMap<>();
+        sortOptions.put(0, "score desc");
+        sortOptions.put(1, "price asc");
+        sortOptions.put(2, "price desc");
+        sortOptions.put(3, "rating asc");
+        sortOptions.put(4, "rating desc");
     }
 
-    private class SortParam {
-        private String field;
-        private String order;
+    public ModifiableSolrParams addSort(ModifiableSolrParams params,
+                                        RequestWithParams requestWithParams) {
 
-        SortParam(String[] parts) {
-            if (parts.length == 0) {
-                this.field = "score";
-            } else {
-                this.field = parts[0];
-            }
-            if (parts.length > 1 && parts[1].equals("asc")) {
-                this.order = "asc";
-            } else {
-                this.order = "desc";
-            }
+        final Integer sortKey = requestWithParams.getSortKey();
+        if (sortOptions.containsKey(sortKey)){
+            params.add("sort", sortOptions.get(sortKey));
         }
-
-        public String getField() {
-            return field;
-        }
-
-        public String getOrder() {
-            return order;
-        }
-
+        return params;
     }
 
 }

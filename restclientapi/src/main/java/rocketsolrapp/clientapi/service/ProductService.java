@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.*;
 import rocketsolrapp.clientapi.schema.FacetQueryService;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
-import rocketsolrapp.clientapi.schema.SortQueryService;
 
 import java.io.IOException;
 import java.util.*;
