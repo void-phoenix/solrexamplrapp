@@ -14,10 +14,15 @@
   <field name="rating" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="title" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="spellCheck" type="text_raw" docValues="false" multiValued="true" indexed="true" required="false" stored="true"/>
 
   <copyField source="brand" dest="brand_concept"/>
   <copyField source="color" dest="color_concept"/>
   <copyField source="size" dest="size_concept"/>
+  <copyField source="color" dest="spellCheck"/>
+  <copyField source="description" dest="spellCheck"/>
+  <copyField source="department" dest="spellCheck"/>
+  <copyField source="title" dest="spellCheck"/>
 
   <dynamicField name="*_concept" type="concept" stored="false"/>
 
@@ -28,20 +33,30 @@
   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="index">
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.EnglishPossessiveFilterFactory"/>
       <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
     <analyzer type="query">
       <tokenizer class="solr.StandardTokenizerFactory"/>
-      <filter class="solr.StopFilterFactory" words="stopwords.txt" ignoreCase="true"/>
-      <filter class="solr.SynonymFilterFactory" expand="true" ignoreCase="true" synonyms="synonyms.txt"/>
       <filter class="solr.LowerCaseFilterFactory"/>
       <filter class="solr.EnglishPossessiveFilterFactory"/>
       <filter class="solr.PorterStemFilterFactory"/>
     </analyzer>
   </fieldType>
+
+  <fieldType name="text_raw" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>
+      </analyzer>
+    </fieldType>
 
   <fieldType name="concept" class="solr.TextField" positionIncrementGap="100" postingsFormat="Memory"
       omitTermFreqAndPositions="true" omitNorms="true">

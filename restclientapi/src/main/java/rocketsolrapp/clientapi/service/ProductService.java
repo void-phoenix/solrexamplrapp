@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    private static final String CORE_NAME = "products";
+    public static final String CORE_NAME = "products";
 
     @Autowired
     SolrRequester solr;
