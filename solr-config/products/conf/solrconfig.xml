@@ -143,6 +143,10 @@
         </lst>
     </searchComponent>
 
+    <searchComponent name="exclude" class="rocketsolrapp.clientapi.spelling.ExcludingSpellingComponent">
+        <str name="filePath">solr-config/products/conf/exclude.txt</str>
+    </searchComponent>
+
     <requestHandler name="/spell" class="solr.SearchHandler" startup="lazy">
         <lst name="defaults">
             <str name="spellcheck.dictionary">wordbreak</str>
@@ -159,6 +163,7 @@
         </lst>
         <arr name="last-components">
             <str>spellcheck</str>
+            <str>exclude</str>
         </arr>
     </requestHandler>
 
