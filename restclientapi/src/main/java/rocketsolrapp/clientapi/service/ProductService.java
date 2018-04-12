@@ -52,6 +52,27 @@ public class ProductService {
         solr.sendSolrRequest(CORE_NAME, request);
     }
 
+    public void add(List<Product> products, Map<String, Set<String>> inventory) throws SolrServerException, IOException {
+        final UpdateRequest request = new UpdateRequest();
+        List<SolrInputDocument> inputDocuments = products.stream().map(this::convertToSolrFormat).collect(Collectors.toList());
+        addInventory(inventory, inputDocuments);
+        request.add(inputDocuments);
+        solr.sendSolrRequest(CORE_NAME, request);
+    }
+
+    private void addInventory(Map<String, Set<String>> inventory, List<SolrInputDocument> inputDocuments) {
+        inputDocuments.forEach(product -> {
+            product.getChildDocuments().forEach(sku -> {
+                final String id = (String) sku.getFieldValue("id");
+                if (inventory.containsKey(id)){
+                    inventory.get(id).forEach( v -> {
+                        sku.addField(v, 1);
+                    });
+                }
+            });
+        });
+    }
+
     public void add(List<Product> products) throws SolrServerException, IOException {
         final UpdateRequest request = new UpdateRequest();
         List<SolrInputDocument> inputDocuments = products.stream().map(this::convertToSolrFormat).collect(Collectors.toList());
@@ -110,6 +131,7 @@ public class ProductService {
             skuDocument.setField("id", sku.getId());
             skuDocument.setField("color", sku.getColor());
             skuDocument.setField("size", sku.getSize());
+            skuDocument.setField("store_0", sku.isStore_0());
 
             productDocument.addChildDocument(skuDocument);
         }

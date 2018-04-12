@@ -46,12 +46,13 @@ public class FacetQueryService {
 
         for (String facetField : facetFields) {
             Object facetObject = facetsResponse.get(facetField);
-            if (facetObject == null) continue;
+            if (facetObject == null ) continue;
+            ArrayList<NamedList> facetValuesRaw = (ArrayList<NamedList>) ((NamedList) facetObject).get("buckets");
             final Facet facet = new Facet();
             facet.setField(facetField);
-            ArrayList<NamedList> facetValuesRaw = (ArrayList<NamedList>) ((NamedList) facetObject).get("buckets");
             if (facetValuesRaw == null) {
                 NamedList count = (NamedList) ((NamedList) facetObject).get(facetField + "_count");
+                if (count == null) continue;
                 facetValuesRaw = (ArrayList<NamedList>) count.get("buckets");
             }
 

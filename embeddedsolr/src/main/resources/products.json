@@ -11,17 +11,20 @@
       {
         "id": "1_2",
         "size": "medium",
-        "color": "Black"
+        "color": "Black",
+        "store_0": 1
       },
       {
         "id": "1_5",
         "size": "medium",
-        "color": "Blue"
+        "color": "Blue",
+        "store_0": 1
       },
       {
         "id": "1_6",
         "size": "large",
-        "color": "Gray"
+        "color": "Gray",
+        "store_0": 0
       }
     ]
   },
@@ -37,12 +40,14 @@
       {
         "id": "2_2",
         "size": "medium",
-        "color": "Black"
+        "color": "Black",
+        "store_0": 0
       },
       {
         "id": "2_3",
         "size": "large",
-        "color": "Blue"
+        "color": "Blue",
+        "store_0": 1
       }
     ]
   },
@@ -58,17 +63,20 @@
       {
         "id": "3_1",
         "size": "small",
-        "color": "Gray"
+        "color": "Gray",
+        "store_0": 1
       },
       {
         "id": "3_2",
         "size": "medium",
-        "color": "Gray"
+        "color": "Gray",
+        "store_0": 1
       },
       {
         "id": "3_6",
         "size": "large",
-        "color": "White"
+        "color": "White",
+        "store_0": 1
       }
     ]
   },
@@ -84,17 +92,20 @@
       {
         "id": "4_1",
         "size": "small",
-        "color": "Red"
+        "color": "Red",
+        "store_0": 1
       },
       {
         "id": "4_3",
         "size": "large",
-        "color": "White"
+        "color": "White",
+        "store_0": 0
       },
       {
         "id": "4_6",
         "size": "large",
-        "color": "Green"
+        "color": "Green",
+        "store_0": 1
       }
     ]
   },
@@ -110,22 +121,26 @@
       {
         "id": "5_1",
         "size": "small",
-        "color": "Green"
+        "color": "Green",
+        "store_0": 1
       },
       {
         "id": "5_2",
         "size": "medium",
-        "color": "Camel"
+        "color": "Camel",
+        "store_0": 1
       },
       {
         "id": "5_4",
         "size": "small",
-        "color": "White"
+        "color": "White",
+        "store_0": 1
       },
       {
         "id": "5_6",
         "size": "large",
-        "color": "White"
+        "color": "White",
+        "store_0": 1
       }
     ]
   },
@@ -141,22 +156,26 @@
       {
         "id": "9_1",
         "size": "little",
-        "color": "Rose"
+        "color": "Rose",
+        "store_0": 1
       },
       {
         "id": "9_2",
         "size": "medium",
-        "color": "Pink"
+        "color": "Pink",
+        "store_0": 1
       },
       {
         "id": "9_4",
         "size": "small",
-        "color": "White"
+        "color": "White",
+        "store_0": 1
       },
       {
         "id": "9_6",
         "size": "large",
-        "color": "White"
+        "color": "White",
+        "store_0": 0
       }
     ]
   },
@@ -172,17 +191,20 @@
       {
         "id": "6_2",
         "size": "medium",
-        "color": "Black"
+        "color": "Black",
+        "store_0": 0
       },
       {
         "id": "6_3",
         "size": "large",
-        "color": "Blue"
+        "color": "Blue",
+        "store_0": 0
       },
       {
         "id": "6_6",
         "size": "large",
-        "color": "Navy"
+        "color": "Navy",
+        "store_0": 0
       }
     ]
   }

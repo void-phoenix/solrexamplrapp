@@ -7,7 +7,11 @@ import rocketsolrapp.clientapi.model.RequestWithParams;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SortQueryService {
@@ -15,7 +19,7 @@ public class SortQueryService {
     private Map<Integer, String> sortOptions;
 
     @PostConstruct
-    private void init() {
+    private void init(){
         sortOptions = new HashMap<>();
         sortOptions.put(0, "score desc");
         sortOptions.put(1, "price asc");
@@ -28,7 +32,7 @@ public class SortQueryService {
                                         RequestWithParams requestWithParams) {
 
         final Integer sortKey = requestWithParams.getSortKey();
-        if (sortOptions.containsKey(sortKey)) {
+        if (sortOptions.containsKey(sortKey)){
             params.add("sort", sortOptions.get(sortKey));
         }
         return params;

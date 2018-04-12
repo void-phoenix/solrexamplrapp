@@ -23,14 +23,10 @@ import rocketsolrapp.clientapi.service.ProductService;
 import rocketsolrapp.clientapi.service.SolrRequester;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -93,11 +89,12 @@ public class DataUploader {
 
     public void reloadProducts() throws IOException, SolrServerException {
         productService.clear();
-        final InputStream content =getResourceByName("products.json");
+        Map<String, Set<String>> inventoryDict = loadInventoryDict();
+        final InputStream content = getResourceByName("products.json");
         final ObjectMapper objectMapper = new ObjectMapper();
         final TypeFactory typeFactory = objectMapper.getTypeFactory();
         final List<Product> products = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Product.class));
-        productService.add(products);
+        productService.add(products, inventoryDict);
     }
 
     class UpdateConceptTask implements Runnable {
@@ -176,5 +173,19 @@ public class DataUploader {
                 name;
 
         return Files.newInputStream(Paths.get(resoutcePath ));
+    }
+
+    private Map<String, Set<String>> loadInventoryDict() throws IOException {
+        final InputStream inventory = getResourceByName("inventory.csv");
+        final Map<String, Set<String>> result = new HashMap<>();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(inventory));
+
+        reader.lines().forEach(line -> {
+            final String[] kv = line.split(",");
+            if (kv.length != 2) return;
+            result.putIfAbsent(kv[0], new HashSet<>());
+            result.get(kv[0]).add(kv[1]);
+        });
+        return result;
     }
 }

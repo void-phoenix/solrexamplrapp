@@ -2,17 +2,17 @@
 <!-- Solr managed schema - automatically generated - DO NOT EDIT -->
 <schema name="exampleCollection" version="1.6">
   <uniqueKey>id</uniqueKey>
-  <field name="_root_" type="string" multiValued="false" indexed="true" required="true" stored="false"/>
-  <field name="_version_" type="plong" indexed="false" stored="false"/>
-  <field name="brand" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
-  <field name="color" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
-  <field name="department" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="_root_" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="_version_" type="plong" indexed="false" stored="true"/>
+  <field name="brand" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
+  <field name="color" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
+  <field name="department" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
   <field name="description" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
-  <field name="docType" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
-  <field name="id" type="string" docValues="true" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="price" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
-  <field name="rating" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
-  <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="true"/>
+  <field name="docType" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
+  <field name="id" type="string" docValues="true" multiValued="false" indexed="true" required="true" stored="false"/>
+  <field name="price" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
+  <field name="rating" type="double" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
+  <field name="size" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
   <field name="title" type="text" docValues="false" multiValued="false" indexed="true" required="false" stored="true"/>
   <field name="spellCheck" type="text_raw" docValues="false" multiValued="true" indexed="true" required="false" stored="true"/>
 
@@ -24,12 +24,14 @@
   <copyField source="department" dest="spellCheck"/>
   <copyField source="title" dest="spellCheck"/>
 
-  <dynamicField name="*_concept" type="concept" stored="false"/>
+  <dynamicField name="*_concept" type="concept" stored="true"/>
+  <dynamicField name="store_*" indexed="false" type="int" multiValued="false" stored="false" docValues="true"/>
 
   <fieldType name="currency" class="solr.CurrencyField" currencyConfig="currency.xml" defaultCurrency="USD" precisionStep="8"/>
   <fieldType name="double" class="solr.DoublePointField" sortMissingLast="true" docValues="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
+  <fieldType name="int" class="solr.IntPointField" docValues="true"/>
   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="index">
       <tokenizer class="solr.StandardTokenizerFactory"/>

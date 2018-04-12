@@ -8,6 +8,7 @@ public class SKU {
     private String id;
     private String color;
     private String size;
+    private int store_0;
 
     public String getId() {
         return id;
@@ -33,4 +34,11 @@ public class SKU {
         this.size = size;
     }
 
+    public int isStore_0() {
+        return store_0;
+    }
+
+    public void setStore_0(int store_0) {
+        this.store_0 = store_0;
+    }
 }
