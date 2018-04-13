@@ -3,7 +3,7 @@
 <schema name="exampleCollection" version="1.6">
   <uniqueKey>id</uniqueKey>
   <field name="_root_" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
-  <field name="_version_" type="plong" indexed="false" stored="true"/>
+  <field name="_version_" type="plong" indexed="false" stored="false" multiValued="false" docValues="true"/>
   <field name="brand" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
   <field name="color" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>
   <field name="department" type="string" docValues="true" multiValued="false" indexed="true" required="false" stored="false"/>

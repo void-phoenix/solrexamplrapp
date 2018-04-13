@@ -35,10 +35,10 @@ public class FacetQueryService {
             facetRequest.set(field, buildParentToChildFacet(field));
         }
 
-        final String jsonFacet = mapper.writeValueAsString(facetRequest);
-        return jsonFacet;
+        return mapper.writeValueAsString(facetRequest);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Facet> extractFacets(QueryResponse response) {
         final List<String> facetFields = productQueryBuilder.getAllFacetFields();
         final NamedList facetsResponse = (NamedList) response.getResponse().get("facets");
@@ -46,7 +46,7 @@ public class FacetQueryService {
 
         for (String facetField : facetFields) {
             Object facetObject = facetsResponse.get(facetField);
-            if (facetObject == null ) continue;
+            if (facetObject == null) continue;
             ArrayList<NamedList> facetValuesRaw = (ArrayList<NamedList>) ((NamedList) facetObject).get("buckets");
             final Facet facet = new Facet();
             facet.setField(facetField);
@@ -57,7 +57,7 @@ public class FacetQueryService {
             }
 
             for (NamedList facetRaw : facetValuesRaw) {
-                Integer countBy = (Integer)(facetRaw.get("count_by_" + facetField));
+                Integer countBy = (Integer) (facetRaw.get("count_by_" + facetField));
                 if (countBy == null) {
                     countBy = (int) facetRaw.get("count");
                 }
