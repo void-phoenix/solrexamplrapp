@@ -30,8 +30,8 @@
   <fieldType name="currency" class="solr.CurrencyField" currencyConfig="currency.xml" defaultCurrency="USD" precisionStep="8"/>
   <fieldType name="double" class="solr.DoublePointField" sortMissingLast="true" docValues="true"/>
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
-  <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
-  <fieldType name="int" class="solr.IntPointField" docValues="true"/>
+  <fieldType name="plong" class="solr.LongPointField" docValues="true" docValuesFormat="Memory"/>
+  <fieldType name="int" class="solr.IntPointField" docValues="true" docValuesFormat="Memory"/>
   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
     <analyzer type="index">
       <tokenizer class="solr.StandardTokenizerFactory"/>
