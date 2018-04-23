@@ -5,13 +5,34 @@
 
   <field name="id" type="uuid" indexed="true" stored="true" required="true" docValues="true"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
-  <field name="field" type="string" docValues="false" multiValued="false" indexed="true" stored="true"/>
-  <field name="type" type="string" indexed="true" stored="true" required="true"/>
+  <field name="matchmode" type="string" docValues="true" multiValued="false" indexed="true" stored="false"/>
+  <field name="searchTerms" type="text" indexed="true" stored="false" required="false"/>
+  <field name="exactLocation" type="bool" indexed="true" stored="false" required="true"/>
+  <field name="filterId" type="string" indexed="true" stored="false" required="false" multiValued="true"/>
+  <field name="priority" type="plong" indexed="true" stored="false"/>
 
+ <field name="type" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
+ <field name="value" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
 
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
   <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
+  <fieldType name="bool" class="solr.BoolField" indexed="true" />
+
+  <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
+      <analyzer type="index">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>
+        <filter class="solr.PorterStemFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.StandardTokenizerFactory"/>
+        <filter class="solr.LowerCaseFilterFactory"/>
+        <filter class="solr.EnglishPossessiveFilterFactory"/>
+        <filter class="solr.PorterStemFilterFactory"/>
+      </analyzer>
+    </fieldType>
 
 
 </schema>
