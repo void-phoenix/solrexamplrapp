@@ -9,7 +9,7 @@
   <field name="searchTerms" type="text" indexed="true" stored="false" required="false"/>
   <field name="exactLocation" type="bool" indexed="true" stored="false" required="true"/>
   <field name="filterId" type="string" indexed="true" stored="false" required="false" multiValued="true"/>
-  <field name="priority" type="plong" indexed="true" stored="false"/>
+  <field name="priority" type="plong" indexed="true" stored="false" default="0"/>
 
  <field name="type" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
  <field name="value" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
