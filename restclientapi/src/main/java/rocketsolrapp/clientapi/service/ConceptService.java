@@ -7,7 +7,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rocketsolrapp.clientapi.model.Concept;
+import rocketsolrapp.clientapi.model.product.Concept;
 import rocketsolrapp.clientapi.model.SolrTaggerRequest;
 
 import java.util.List;

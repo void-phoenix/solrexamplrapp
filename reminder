@@ -6,3 +6,8 @@ searchLegs=+({!lucene v=$childConcept} {!child of=docType:parent v=$parentLegs})
 &searchLegs=+({!lucene v=$childConcept} {!child of=docType:product v=$parentLegs})
 &parentLegs={!dismax v=$keywords qf=$dismaxQueryFields}&dismaxQueryFields=title^2.0 description^1.0
 &keywords= Pattern
+
+
+q={!parent+which%3DdocType:action+v%3D$textquery}&textquery=(%2B{!term+f%3D%3DsearchTerms_exact+v%3D$keywords}+%2Bmatchmode:MatchExact)+(%2Bmatchmode:matchPhrase+%2B{!lucene+qf%3DsearchTerms+v%3D$keywords_phrase})+(%2Bmatchmode:MatchAny+%2B{!lucene+qf%3DsearchTerms+v%3D$keywords})&keywords=blue+jeans&keywords_phrase="blue+jeans"
+
+keywords_phrase="cheap red jeans"&keywords=cheap red jeans&textquery=(+{!lucene qf=searchTerms_exact v=$keywords_phrase} +matchmode:MatchExact) (+matchmode:matchPhrase +{!lucene qf=searchTerms v=$keywords_phrase}) (+matchmode:MatchAny +{!lucene qf=searchTerms v=$keywords})

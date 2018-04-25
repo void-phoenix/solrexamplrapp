@@ -1,0 +1,63 @@
+[
+  {
+    "id":"1",
+    "type": "filter",
+    "value": "color:Red",
+    "priority": 1000,
+    "docType": "action",
+    "triggers": [
+      {
+        "id":"1_1",
+        "exactLocation": false,
+        "docType": "trigger",
+        "matchmode": "MatchAny",
+        "searchTerms": "scarlet",
+        "filterId": []
+      },
+      {
+        "id":"1_2",
+        "exactLocation": false,
+        "matchmode": "",
+        "docType": "trigger",
+        "searchTerms": "",
+        "filterId": [
+          "color:scarlet"
+        ]
+      }
+    ]
+  },
+  {
+    "id":"2",
+    "type": "sort",
+    "docType": "action",
+    "value": "price asc",
+    "priority": 1000,
+    "triggers": [
+      {
+        "id":"2_1",
+        "exactLocation": false,
+        "matchmode": "MatchAny",
+        "docType": "trigger",
+        "searchTerms": "cheap",
+        "filterId": []
+      }
+    ]
+  },
+  {
+    "id":"3",
+    "type": "redirect",
+    "docType": "action",
+    "value": "https://www.bluejeans.com/",
+    "priority": 1000,
+    "triggers": [
+      {
+        "id":"3_1",
+        "exactLocation": false,
+        "matchmode": "MatchExact",
+        "docType": "trigger",
+        "searchTerms": "blue jeans",
+        "filterId": []
+      }
+    ]
+  }
+]

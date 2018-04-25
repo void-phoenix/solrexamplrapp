@@ -15,11 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rocketsolrapp.clientapi.model.Concept;
-import rocketsolrapp.clientapi.model.Product;
+import rocketsolrapp.clientapi.model.product.Concept;
+import rocketsolrapp.clientapi.model.product.Product;
+import rocketsolrapp.clientapi.model.rule.Action;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
 import rocketsolrapp.clientapi.service.ConceptService;
 import rocketsolrapp.clientapi.service.ProductService;
+import rocketsolrapp.clientapi.service.RuleService;
 import rocketsolrapp.clientapi.service.SolrRequester;
 
 import javax.annotation.PostConstruct;
@@ -52,7 +54,11 @@ public class DataUploader {
     @Autowired
     ConceptService conceptService;
 
+    @Autowired
+    RuleService ruleService;
+
     private ExecutorService executorService;
+
 
     @PostConstruct
     private void init() {
@@ -61,7 +67,7 @@ public class DataUploader {
         );
     }
 
-    public void reloadConcepts() throws Exception{
+    public void reloadConcepts() throws Exception {
         clearConcepts();
         loadSynonyms();
         for (String conceptField : productQueryBuilder.getConceptFields()) {
@@ -69,7 +75,12 @@ public class DataUploader {
         }
     }
 
-    private void clearConcepts() throws Exception{
+    public void reloadRules() throws Exception {
+        ruleService.clear();
+        loadRules();
+    }
+
+    private void clearConcepts() throws Exception {
         final UpdateRequest request = new UpdateRequest();
         request.deleteByQuery("*:*");
         try {
@@ -79,8 +90,16 @@ public class DataUploader {
         }
     }
 
+    private void loadRules() throws Exception {
+        final InputStream content = getResourceByName("rules.json");
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final TypeFactory typeFactory = objectMapper.getTypeFactory();
+        final List<Action> actions = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Action.class));
+        ruleService.add(actions);
+    }
+
     private void loadSynonyms() throws Exception {
-        final InputStream content =getResourceByName("synonyms.json");
+        final InputStream content = getResourceByName("synonyms.json");
         final ObjectMapper objectMapper = new ObjectMapper();
         final TypeFactory typeFactory = objectMapper.getTypeFactory();
         final List<Concept> synonyms = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Concept.class));
@@ -95,6 +114,30 @@ public class DataUploader {
         final TypeFactory typeFactory = objectMapper.getTypeFactory();
         final List<Product> products = objectMapper.readValue(content, typeFactory.constructCollectionType(List.class, Product.class));
         productService.add(products, inventoryDict);
+    }
+
+    private InputStream getResourceByName(String name) throws IOException {
+        final String resoutcePath = "embeddedsolr" + File.separator +
+                "src" + File.separator +
+                "main" + File.separator +
+                "resources" + File.separator +
+                name;
+
+        return Files.newInputStream(Paths.get(resoutcePath));
+    }
+
+    private Map<String, Set<String>> loadInventoryDict() throws IOException {
+        final InputStream inventory = getResourceByName("inventory.csv");
+        final Map<String, Set<String>> result = new HashMap<>();
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(inventory));
+
+        reader.lines().forEach(line -> {
+            final String[] kv = line.split(",");
+            if (kv.length != 2) return;
+            result.putIfAbsent(kv[0], new HashSet<>());
+            result.get(kv[0]).add(kv[1]);
+        });
+        return result;
     }
 
     class UpdateConceptTask implements Runnable {
@@ -143,7 +186,8 @@ public class DataUploader {
                 }
             });
         }
-        private List<String> getSynonyms(String concept){
+
+        private List<String> getSynonyms(String concept) {
             final List<String> result = new ArrayList<>();
             try {
                 NamedList synonymsResponce = conceptService.getSynonyms(concept);
@@ -163,29 +207,5 @@ public class DataUploader {
             }
             return result;
         }
-    }
-
-    private InputStream getResourceByName(String name) throws IOException{
-        final String resoutcePath = "embeddedsolr" + File.separator +
-                "src" + File.separator +
-                "main" + File.separator +
-                "resources" + File.separator +
-                name;
-
-        return Files.newInputStream(Paths.get(resoutcePath ));
-    }
-
-    private Map<String, Set<String>> loadInventoryDict() throws IOException {
-        final InputStream inventory = getResourceByName("inventory.csv");
-        final Map<String, Set<String>> result = new HashMap<>();
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(inventory));
-
-        reader.lines().forEach(line -> {
-            final String[] kv = line.split(",");
-            if (kv.length != 2) return;
-            result.putIfAbsent(kv[0], new HashSet<>());
-            result.get(kv[0]).add(kv[1]);
-        });
-        return result;
     }
 }

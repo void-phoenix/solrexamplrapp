@@ -4,7 +4,7 @@ package rocketsolrapp.clientapi.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import rocketsolrapp.clientapi.model.Product;
+import rocketsolrapp.clientapi.model.product.Product;
 import rocketsolrapp.clientapi.model.RequestWithParams;
 import rocketsolrapp.clientapi.model.SearchResponse;
 import rocketsolrapp.clientapi.service.ProductService;

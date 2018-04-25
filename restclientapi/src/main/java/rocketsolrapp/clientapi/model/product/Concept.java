@@ -1,4 +1,4 @@
-package rocketsolrapp.clientapi.model;
+package rocketsolrapp.clientapi.model.product;
 
 import java.util.List;
 

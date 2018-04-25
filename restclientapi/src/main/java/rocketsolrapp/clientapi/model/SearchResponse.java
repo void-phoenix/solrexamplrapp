@@ -1,5 +1,7 @@
 package rocketsolrapp.clientapi.model;
 
+import rocketsolrapp.clientapi.model.product.Product;
+
 import java.util.List;
 
 public class SearchResponse {

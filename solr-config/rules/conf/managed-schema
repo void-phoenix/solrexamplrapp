@@ -3,21 +3,30 @@
 <schema name="exampleCollection" version="1.6">
   <uniqueKey>id</uniqueKey>
 
-  <field name="id" type="uuid" indexed="true" stored="true" required="true" docValues="true"/>
+  <field name="_root_" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
+  <field name="id" type="string" indexed="true" stored="true" required="true" docValues="true"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
   <field name="matchmode" type="string" docValues="true" multiValued="false" indexed="true" stored="false"/>
-  <field name="searchTerms" type="text" indexed="true" stored="false" required="false"/>
-  <field name="exactLocation" type="bool" indexed="true" stored="false" required="true"/>
+  <field name="searchTerms_exact" type="full_text" indexed="true" stored="false" required="false"/>
+  <field name="searchTerms" type="text" indexed="true" stored="true" required="false"/>
+  <field name="docType" type="string" indexed="true" stored="true" required="true"/>
+  <field name="exactLocation" type="bool" indexed="true" stored="false" required="false"/>
   <field name="filterId" type="string" indexed="true" stored="false" required="false" multiValued="true"/>
   <field name="priority" type="plong" indexed="true" stored="false" default="0"/>
 
- <field name="type" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
- <field name="value" type="string" indexed="false" stored="true" required="true" multiValued="false"/>
+ <field name="type" type="string" indexed="false" stored="true" required="false" multiValued="false"/>
+ <field name="value" type="string" indexed="false" stored="true" required="false" multiValued="false"/>
 
   <fieldType name="string" class="solr.StrField" sortMissingLast="true" docValues="true"/>
   <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
   <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
   <fieldType name="bool" class="solr.BoolField" indexed="true" />
+
+  <fieldType name="full_text" class="solr.TextField">
+    <analyzer>
+        <tokenizer class="solr.KeywordTokenizerFactory"/>
+    </analyzer>
+  </fieldType>
 
   <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
@@ -34,5 +43,6 @@
       </analyzer>
     </fieldType>
 
+  <copyField source="searchTerms" dest="searchTerms_exact"/>
 
 </schema>

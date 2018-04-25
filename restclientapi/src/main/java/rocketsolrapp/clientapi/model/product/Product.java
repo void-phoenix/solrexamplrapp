@@ -1,6 +1,4 @@
-package rocketsolrapp.clientapi.model;
-
-import org.springframework.lang.Nullable;
+package rocketsolrapp.clientapi.model.product;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

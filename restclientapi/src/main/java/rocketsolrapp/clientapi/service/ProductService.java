@@ -7,14 +7,14 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.query.FilterQuery;
-import org.apache.solr.search.ExtendedQuery;
-import org.apache.solr.search.ExtendedQueryBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rocketsolrapp.clientapi.model.*;
+import rocketsolrapp.clientapi.model.product.Product;
+import rocketsolrapp.clientapi.model.product.SKU;
+import rocketsolrapp.clientapi.model.rule.Action;
 import rocketsolrapp.clientapi.schema.FacetQueryService;
 import rocketsolrapp.clientapi.schema.ProductQueryBuilder;
 
@@ -38,9 +38,16 @@ public class ProductService {
     @Autowired
     FacetQueryService facetService;
 
+    @Autowired
+    RuleService ruleService;
+
     public SearchResponse query(RequestWithParams request) throws Exception {
+
+        //TODO refactor productRequestbuilder to be able to add single filter or replace sort
         final SearchResponse searchResponse = new SearchResponse();
+        final List<Action> actions = ruleService.getActions(request);
         final SolrQuery query = productRequestbuilder.buildProductQuery(request);
+        applyRules(actions, query);
 
         final QueryResponse response = solr.executeQuery(CORE_NAME, query);
 
@@ -50,6 +57,10 @@ public class ProductService {
 
         searchResponse.setFacets(facetResult);
         return searchResponse;
+    }
+
+    private void applyRules(List<Action> actions, SolrQuery query){
+        System.out.println();
     }
 
     public void add(Product product) throws SolrServerException, IOException {

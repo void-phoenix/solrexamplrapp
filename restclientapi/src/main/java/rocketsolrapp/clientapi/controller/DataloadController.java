@@ -25,10 +25,16 @@ public class DataloadController {
         dataUploader.reloadProducts();
     }
 
+    @RequestMapping(value = "/rules", method = RequestMethod.GET)
+    public void reloadRules() throws Exception{
+        dataUploader.reloadRules();
+    }
+
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public void reloadAll() throws Exception{
         reloadProducts();
         reloadConcepts();
+        reloadRules();
     }
 }
 
