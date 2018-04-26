@@ -48,7 +48,7 @@ public class RuleService {
 
     public List<Action> getActions(RequestWithParams request){
         final String keywords = request.getKeywords();
-        final SolrQuery query = queryService.buildQuery(keywords);
+        final SolrQuery query = queryService.buildQuery(keywords, request.getFilter());
         final QueryResponse response = solr.executeQuery(CORE, query);
         return response.getResults()
                 .stream()
@@ -78,6 +78,7 @@ public class RuleService {
         inputDocument.addField("searchTerms", trigger.getSearchTerms());
         inputDocument.addField("exactLocation", trigger.isExactLocation());
         inputDocument.addField("docType", trigger.getDocType());
+        inputDocument.addField("filtersCount", trigger.getFilterId().size());
         return inputDocument;
     }
 

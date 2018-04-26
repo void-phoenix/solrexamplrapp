@@ -5,7 +5,8 @@
 
   <field name="_root_" type="string" multiValued="false" indexed="true" required="true" stored="true"/>
   <field name="id" type="string" indexed="true" stored="true" required="true" docValues="true"/>
-  <field name="_version_" type="plong" indexed="false" stored="false"/>
+  <field name="_version_" type="plong" indexed="false" stored="false"/>d
+  <field name="filtersCount" type="plong" indexed="true" stored="true"/>d
   <field name="matchmode" type="string" docValues="true" multiValued="false" indexed="true" stored="false"/>
   <field name="searchTerms_exact" type="full_text" indexed="true" stored="false" required="false"/>
   <field name="searchTerms" type="text" indexed="true" stored="true" required="false"/>
