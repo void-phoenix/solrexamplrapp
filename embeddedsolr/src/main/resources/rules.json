@@ -59,5 +59,22 @@
         "filterId": []
       }
     ]
+  },
+  {
+    "id":"4",
+    "type": "redirect",
+    "docType": "action",
+    "value": "https://google.com/",
+    "priority": 1000,
+    "triggers": [
+      {
+        "id":"4_1",
+        "exactLocation": true,
+        "matchmode": "",
+        "docType": "trigger",
+        "searchTerms": "",
+        "filterId": ["color:unk", "store:google"]
+      }
+    ]
   }
 ]

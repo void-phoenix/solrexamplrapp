@@ -12,11 +12,12 @@ public class RulesQueryService {
 
     private static final String PARENT_QUERY = "{!parent which=docType:action v=$basequery}";
     private static final String BASE_QUERY = "(+{!term f=searchTerms_exact v=$keywords} +matchmode:MatchExact) (+matchmode:matchPhrase +{!lucene qf=searchTerms v=$keywords_phrase}) (+matchmode:MatchAny +{!lucene qf=searchTerms v=$keywords})";
-    private static final String BASE_QUERY_FILTER_ADDITION = " (!filtersCount:0 +exactLocation:false  +{!frange l=0 u=0 incl=true incu=true v=$filter_part})";
+    private static final String BASE_QUERY_FILTER_ADDITION = " (!filtersCount:0 (+exactLocation:false  +{!frange l=0 u=0 incl=true incu=true v=$filter_part}) (+exactLocation:true +{!frange l=0 u=0 incl=true incu=true v=$exact_func}  +{!frange l=0 u=0 incl=true incu=true v=$filter_part}))";
     private static final String BASE_QUERY_PARAM_NAME = "basequery";
     private static final String KEYWORDS_PARAM_NAME = "keywords";
     private static final String KEYWORDS_PHRASE_PARAM_NAME = "keywords_phrase";
     private static final String FILTER_PART_PARAM_NAME = "filter_part";
+    private static final String EXACT_FUNC_PARAM_NAME = "exact_func";
 
     public SolrQuery buildQuery(String keywords, List<String> filters) {
         SolrQuery query = new SolrQuery(PARENT_QUERY);
@@ -25,6 +26,7 @@ public class RulesQueryService {
         query.add(KEYWORDS_PARAM_NAME, keywords);
         query.add(KEYWORDS_PHRASE_PARAM_NAME, "\"" + keywords + "\"");
         buildFilterPartQuery(filters, query);
+        query.add(EXACT_FUNC_PARAM_NAME, "sub( field(filtersCount), " + filters.size() + " )");
         return query;
     }
 
@@ -40,6 +42,4 @@ public class RulesQueryService {
         result.append(" ), field(filtersCount))");
         query.add(FILTER_PART_PARAM_NAME, result.toString());
     }
-
-
 }
