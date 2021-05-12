@@ -33,7 +33,7 @@
 
         <javax.inject.version>1</javax.inject.version>
 
-        <solr-version>7.3.0</solr-version>
+        <solr-version>8.8.2</solr-version>
         <jetty-version>9.4.8.v20171121</jetty-version>
 
         <jersey-version>1.13</jersey-version>
